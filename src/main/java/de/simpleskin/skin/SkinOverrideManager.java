@@ -16,11 +16,37 @@ public final class SkinOverrideManager {
     }
 
     public static void set(UUID playerId, Identifier texture, SkinModel model) {
+        set(playerId, texture, model, CapeOverride.keep(), null);
+    }
+
+    /**
+     * @param cape what to do with the cape; {@code capeTexture} is only read for
+     *     {@link CapeOverride#REPLACE} and may otherwise be {@code null}.
+     */
+    public static void set(UUID playerId, Identifier texture, SkinModel model, CapeOverride cape,
+            Identifier capeTexture) {
         Override previous = OVERRIDES.get(playerId);
-        if (previous != null && previous.texture().equals(texture) && previous.model() == model) {
+        if (previous != null && previous.texture().equals(texture) && previous.model() == model
+                && previous.cape == cape && java.util.Objects.equals(previous.capeTexture, capeTexture)) {
             return;
         }
-        OVERRIDES.put(playerId, new Override(texture, model, new ClientAsset.ResourceTexture(texture, texture)));
+        OVERRIDES.put(playerId, new Override(texture, model, new ClientAsset.ResourceTexture(texture, texture),
+                cape, capeTexture == null ? null : new ClientAsset.ResourceTexture(capeTexture, capeTexture),
+                capeTexture));
+    }
+
+    /** How an override treats the cape slot. */
+    public enum CapeOverride {
+        /** Leave the profile's cape untouched. */
+        KEEP,
+        /** Render no cape at all. */
+        HIDE,
+        /** Render a specific cape texture. */
+        REPLACE;
+
+        static CapeOverride keep() {
+            return KEEP;
+        }
     }
 
     public static void clear(UUID playerId) {
@@ -53,13 +79,20 @@ public final class SkinOverrideManager {
         private final Identifier texture;
         private final SkinModel model;
         private final ClientAsset.ResourceTexture body;
+        private final CapeOverride cape;
+        private final ClientAsset.ResourceTexture capeAsset;
+        private final Identifier capeTexture;
         private volatile PlayerSkin cachedSource;
         private volatile PlayerSkin cachedResult;
 
-        private Override(Identifier texture, SkinModel model, ClientAsset.ResourceTexture body) {
+        private Override(Identifier texture, SkinModel model, ClientAsset.ResourceTexture body,
+                CapeOverride cape, ClientAsset.ResourceTexture capeAsset, Identifier capeTexture) {
             this.texture = texture;
             this.model = model;
             this.body = body;
+            this.cape = cape;
+            this.capeAsset = capeAsset;
+            this.capeTexture = capeTexture;
         }
 
         private Identifier texture() {
@@ -76,7 +109,12 @@ public final class SkinOverrideManager {
             if (source != null && source.equals(original) && result != null) {
                 return result;
             }
-            PlayerSkin derived = new PlayerSkin(body, original.cape(), original.elytra(),
+            ClientAsset.Texture capeSlot = switch (cape) {
+                case KEEP -> original.cape();
+                case HIDE -> null;
+                case REPLACE -> capeAsset != null ? capeAsset : original.cape();
+            };
+            PlayerSkin derived = new PlayerSkin(body, capeSlot, original.elytra(),
                     model.toMinecraft(), original.secure());
             cachedSource = original;
             cachedResult = derived;

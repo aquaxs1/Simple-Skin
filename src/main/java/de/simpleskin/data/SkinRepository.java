@@ -294,7 +294,7 @@ public final class SkinRepository {
         }
     }
 
-    static void validatePng(byte[] bytes) throws IOException {
+    public static void validatePng(byte[] bytes) throws IOException {
         if (bytes == null || bytes.length < 24 || bytes[0] != (byte) 0x89 || bytes[1] != 0x50
                 || bytes[2] != 0x4E || bytes[3] != 0x47) {
             throw new IOException("The downloaded skin is not a PNG image");

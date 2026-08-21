@@ -6,6 +6,7 @@ import de.simpleskin.data.SimpleSkinConfig;
 import de.simpleskin.data.StoredSkin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
@@ -39,6 +40,8 @@ public final class SkinLibraryScreen extends Screen {
     private int maxScrollRow;
     private int playerRefreshTimer;
     private int lastPlayerCount = -1;
+    private EditBox searchField;
+    private String searchTerm = "";
     private String status = "K opens Simple Skin anywhere in-game.";
     private List<Card> cards = List.of();
 
@@ -64,6 +67,22 @@ public final class SkinLibraryScreen extends Screen {
         addRenderableWidget(new ThemedButton(panelX + panelWidth - 96, panelY + 42, 78, 22,
                 Component.literal("Import PNG"), ignored -> importSkin(), false)
                 .tooltip(Component.literal("Load a 64x64 skin PNG from your computer")));
+        addRenderableWidget(new ThemedButton(panelX + panelWidth - 180, panelY + 42, 78, 22,
+                Component.literal("Shuffle"), ignored -> mod.equipRandom(this::setStatus), false)
+                .tooltip(Component.literal("Equip a random saved skin")));
+
+        if (tab == Tab.STEAL) {
+            // Searching by name reaches players who are not on this server at all.
+            searchField = new EditBox(font, panelX + 18, contentTop - 26, 150, 18,
+                    Component.literal("Player name"));
+            searchField.setMaxLength(16);
+            searchField.setValue(searchTerm);
+            searchField.setResponder(value -> searchTerm = value);
+            addRenderableWidget(searchField);
+            addRenderableWidget(new ThemedButton(panelX + 174, contentTop - 26, 70, 18,
+                    Component.literal("Search"), ignored -> searchByName(), false)
+                    .tooltip(Component.literal("Look a player up through Mojang")));
+        }
 
         cards = buildCards();
         columns = Math.max(1, (panelWidth - 36 + GAP) / (CARD_WIDTH + GAP));
@@ -175,6 +194,36 @@ public final class SkinLibraryScreen extends Screen {
                 minecraft.gui.setScreen(new SkinSettingsScreen(this, skin));
             }
         }));
+    }
+
+    /**
+     * Looks a name up through Mojang and adds that player's skin to the library, so a skin can be
+     * taken from someone who is not on this server.
+     */
+    private void searchByName() {
+        String name = searchTerm.strip();
+        if (name.isEmpty()) {
+            setStatus("Type a player name first.");
+            return;
+        }
+        setStatus("Looking up " + name + "...");
+        mod.profiles().lookup(name)
+                .thenCompose(profile -> mod.downloads().download(profile))
+                .whenComplete((downloaded, error) -> Minecraft.getInstance().execute(() -> {
+                    if (error != null) {
+                        setStatus(SimpleSkinClient.describe(error, null));
+                        return;
+                    }
+                    try {
+                        StoredSkin found = mod.repository().add(downloaded.png(), downloaded.playerName(),
+                                downloaded.playerName(), downloaded.model(), true);
+                        setStatus("Saved " + found.name() + " to Change Skin.");
+                        tab = Tab.SAVED;
+                        rebuildWidgets();
+                    } catch (IOException exception) {
+                        setStatus("Could not store that skin: " + exception.getMessage());
+                    }
+                }));
     }
 
     private void importSkin() {

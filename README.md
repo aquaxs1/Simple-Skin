@@ -1,37 +1,48 @@
 # Simple Skin
 
-Simple Skin is a client-side Fabric mod for Minecraft 1.21.11. Press `K` in a
-world or on a server to open a compact skin library with history, saved skins,
-and the current server player list.
+Simple Skin is a Fabric mod for **Minecraft 26.2**. Press `K` in a world or on a
+server to open a skin library with history, saved skins, the server player list,
+a search box, and a small editor.
+
+The mod is client-side. Installing it on a **server** as well is optional and
+unlocks live skin sync (see below).
 
 ## Features
 
 - Equip a stored skin immediately on the local client.
-- Make the change visible to **other players**: upload to the signed-in
-  Minecraft profile, wait until Mojang really serves the new texture, then
-  rejoin the server so it re-broadcasts your skin to everyone online.
-- Save skins from players on the current server.
-- Import any 64x64 (or legacy 64x32) skin PNG from your computer.
-- Keep a local history and assign one-key skin shortcuts.
-- Rotate a large 3D preview, export any stored skin as PNG, and delete skins
-  you no longer want.
+- Make the change visible to **other players**, either instantly through live
+  sync on a Simple Skin server, or through the profile-upload route anywhere else.
+- Steal skins from players on the server, or look **any player up by name**.
+- Import skin PNGs from your computer, or just drop them in a folder.
+- Outfits: pair a skin with a cape choice (keep, hide, or one your account owns).
+- Edit a skin: remove second-layer overlays, graft on another skin's head, or
+  replace one colour with another.
+- Hotkeys per skin, a shuffle key, and optional automatic rotation.
+- Rotate a large 3D preview, export any skin as PNG, and delete ones you don't want.
 
 ## How other players see your skin
 
-This is the part that a client-side mod cannot fake. Every other player's game
-asks *the server* what your skin is, and the server asks Mojang's session
-server exactly once — while you are logging in. So Simple Skin does the only
-thing that actually reaches other people:
+There are two routes, and the mod picks the best one available.
+
+**1. Live sync (instant, needs the mod on the server).** The client sends the
+skin over a `simple_skin:equip` plugin channel; the server validates it and
+relays it to every other Simple Skin client, which applies it right away. No
+rejoin, no Mojang round-trip. On a vanilla server the channel is never
+negotiated, so nothing is sent and the mod falls back to route 2.
+
+**2. Profile upload (works everywhere, slower).** This is the only route a
+purely client-side mod has. Every other player's game asks *the server* what
+your skin is, and the server asks Mojang's session server exactly once — while
+you are logging in. So:
 
 1. **Upload.** The PNG is pushed to your authenticated Minecraft profile.
 2. **Verify.** Simple Skin polls your profile and downloads the texture Mojang
-   is serving, comparing it byte for byte with what you uploaded. Mojang's CDN
-   lags behind the upload by a few seconds, and rejoining too early would hand
-   the server your *previous* skin.
+   is actually serving, comparing it byte for byte. The CDN lags behind the
+   upload, and rejoining too early would hand the server your *previous* skin.
 3. **Rejoin.** Once Mojang serves the new skin, reconnecting makes the server
-   re-read your profile and send the new texture to every player online.
+   re-read your profile and send the new texture to everyone online.
 
-The `Visibility` setting controls how far a change travels:
+The `Visibility` setting controls route 2:
 
 | Setting | What happens |
 | --- | --- |
@@ -46,10 +57,29 @@ Uploading needs a real online session. In offline mode, or with an expired
 token, the skin still applies locally and the status line says so instead of
 pretending it worked.
 
+## Capes
+
+Mojang only lets an account activate a cape it already owns — capes cannot be
+uploaded, by this mod or any other. An outfit can therefore keep the current
+cape, hide it, or switch to one of your owned capes. That change goes to the
+profile, so other players see it the same way they see a new skin.
+
+## Folders
+
+| Path | What it holds |
+| --- | --- |
+| `.minecraft/config/simple-skin/` | Library metadata and settings |
+| `.minecraft/config/simple-skin/skins/` | Stored skin PNGs |
+| `.minecraft/config/simple-skin/import/` | Drop PNGs here and they are imported |
+| `.minecraft/simple-skin/exports/` | PNG exports |
+
 ## Build
 
-Use Java 21 and run `./gradlew build` (`gradlew.bat build` on Windows). The
-Fabric mod JAR is written to `build/libs`.
+Minecraft 26.2 needs **Java 25** and is shipped unobfuscated, so there are no
+yarn or official mappings for it — Mojang stopped publishing `client_mappings`
+with 26.1. The build uses Fabric's **no-remap Loom**, which compiles directly
+against the shipped names, which is also why mod dependencies are declared as
+ordinary `implementation` entries rather than `modImplementation`.
 
-Skin images and metadata are stored in `.minecraft/config/simple-skin`. PNG
-exports are written to `.minecraft/simple-skin/exports`.
+Run `./gradlew build` (`gradlew.bat build` on Windows) with a Java 25 toolchain.
+The mod JAR is written to `build/libs`.

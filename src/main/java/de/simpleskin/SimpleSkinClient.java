@@ -2,12 +2,17 @@ package de.simpleskin;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import de.simpleskin.data.SimpleSkinConfig;
+import de.simpleskin.data.SkinDropFolder;
 import de.simpleskin.data.SkinRepository;
 import de.simpleskin.data.StoredSkin;
 import de.simpleskin.screen.SkinLibraryScreen;
+import de.simpleskin.net.SkinSyncClient;
+import de.simpleskin.skin.CapeTextureStore;
 import de.simpleskin.skin.MinecraftSkinUploadService;
+import de.simpleskin.skin.MojangProfileService;
 import de.simpleskin.skin.PlayerSkinDownloadService;
 import de.simpleskin.skin.SkinOverrideManager;
+import de.simpleskin.skin.SkinRotationService;
 import de.simpleskin.skin.SkinTextureStore;
 import de.simpleskin.skin.SkinVisibilityService;
 import net.fabricmc.api.ClientModInitializer;
@@ -38,9 +43,15 @@ public final class SimpleSkinClient implements ClientModInitializer {
     private final MinecraftSkinUploadService uploads = new MinecraftSkinUploadService();
     /** Hotkeys held down on the previous tick, so holding a key equips once instead of every tick. */
     private final Set<Integer> pressedSkinKeys = new HashSet<>();
+    private final MojangProfileService profiles = new MojangProfileService();
     private SkinVisibilityService visibility;
     private SkinTextureStore textures;
+    private CapeTextureStore capes;
+    private SkinDropFolder dropFolder;
+    private SkinRotationService rotation;
+    private SkinSyncClient sync;
     private KeyMapping openMenu;
+    private KeyMapping randomSkin;
     /** The skin the local override currently shows, or {@code null} when nothing is overridden. */
     private StoredSkin equipped;
 
@@ -54,10 +65,57 @@ public final class SimpleSkinClient implements ClientModInitializer {
         repository.load();
         config.load();
         textures = new SkinTextureStore(repository);
+        capes = new CapeTextureStore(downloads);
         visibility = new SkinVisibilityService(uploads, downloads, config);
+        rotation = new SkinRotationService(repository, config);
+        dropFolder = new SkinDropFolder(repository);
+        dropFolder.prepare();
+        sync = new SkinSyncClient();
+        sync.register();
         openMenu = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.simple_skin.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY));
+        randomSkin = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.simple_skin.random", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, CATEGORY));
         ClientTickEvents.END_CLIENT_TICK.register(this::onEndTick);
+    }
+
+    public CapeTextureStore capes() {
+        return capes;
+    }
+
+    public MojangProfileService profiles() {
+        return profiles;
+    }
+
+    public MinecraftSkinUploadService uploads() {
+        return uploads;
+    }
+
+    public PlayerSkinDownloadService downloads() {
+        return downloads;
+    }
+
+    public SkinRotationService rotation() {
+        return rotation;
+    }
+
+    public SkinSyncClient sync() {
+        return sync;
+    }
+
+    public SkinDropFolder dropFolder() {
+        return dropFolder;
+    }
+
+    /** Equips a random saved skin, reporting what happened through {@code status}. */
+    public void equipRandom(Consumer<String> status) {
+        Optional<StoredSkin> pick = rotation.pick(equippedSkin());
+        if (pick.isEmpty()) {
+            status.accept("Save at least two skins to shuffle between them.");
+            return;
+        }
+        rotation.resetTimer();
+        equip(pick.get(), status);
     }
 
     public SkinRepository repository() {
@@ -97,12 +155,63 @@ public final class SimpleSkinClient implements ClientModInitializer {
             status.accept("The local skin PNG could not be loaded.");
             return;
         }
-        SkinOverrideManager.set(client.player.getUUID(), texture, skin.model());
+        applyOverride(client.player.getUUID(), skin, texture);
         equipped = skin;
+        rotation.resetTimer();
         repository.markEquipped(skin);
         status.accept("Equipped " + skin.name() + ".");
-        if (publish) {
-            visibility.publish(skin, repository.imagePath(skin), status);
+        if (!publish) {
+            return;
+        }
+        applyCape(skin, status);
+        // On a server running Simple Skin this reaches everyone immediately, so the slower
+        // upload-and-rejoin route is only needed where the channel is unavailable.
+        if (config.liveSync() && publishLive(skin)) {
+            status.accept("Equipped " + skin.name() + " — synced live to this server.");
+            return;
+        }
+        visibility.publish(skin, repository.imagePath(skin), status);
+    }
+
+    /** Applies the body texture plus whatever the outfit says about the cape. */
+    private void applyOverride(java.util.UUID playerId, StoredSkin skin, Identifier texture) {
+        switch (skin.capeChoice()) {
+            case NONE -> SkinOverrideManager.set(playerId, texture, skin.model(),
+                    SkinOverrideManager.CapeOverride.HIDE, null);
+            case SPECIFIC -> {
+                Identifier cape = skin.capeId() == null ? null : capes.cached(skin.capeId()).orElse(null);
+                SkinOverrideManager.set(playerId, texture, skin.model(),
+                        cape == null ? SkinOverrideManager.CapeOverride.KEEP
+                                : SkinOverrideManager.CapeOverride.REPLACE, cape);
+            }
+            case KEEP -> SkinOverrideManager.set(playerId, texture, skin.model(),
+                    SkinOverrideManager.CapeOverride.KEEP, null);
+        }
+    }
+
+    /** Pushes the outfit's cape choice to the Mojang profile, where other players read it from. */
+    private void applyCape(StoredSkin skin, Consumer<String> status) {
+        Minecraft client = Minecraft.getInstance();
+        switch (skin.capeChoice()) {
+            case KEEP -> {
+                // Nothing to do: the profile keeps whatever cape it already had.
+            }
+            case NONE -> uploads.setActiveCape(null)
+                    .thenAccept(result -> client.execute(() -> status.accept(result.message())));
+            case SPECIFIC -> {
+                if (skin.capeId() != null) {
+                    uploads.setActiveCape(skin.capeId())
+                            .thenAccept(result -> client.execute(() -> status.accept(result.message())));
+                }
+            }
+        }
+    }
+
+    private boolean publishLive(StoredSkin skin) {
+        try {
+            return sync.publish(java.nio.file.Files.readAllBytes(repository.imagePath(skin)), skin.model());
+        } catch (IOException exception) {
+            return false;
         }
     }
 
@@ -239,8 +348,31 @@ public final class SimpleSkinClient implements ClientModInitializer {
         pressedSkinKeys.addAll(downNow);
 
         if (pending != null) {
-            equip(pending, message -> client.player.sendOverlayMessage(Component.literal("[Simple Skin] " + message)),
-                    config.uploadOnHotkey());
+            equip(pending, actionBar(client), config.uploadOnHotkey());
+            return;
         }
+        while (randomSkin.consumeClick()) {
+            equipRandom(actionBar(client));
+        }
+        rotation.tick(equippedSkin()).ifPresent(next -> {
+            equip(next, actionBar(client));
+            client.player.sendOverlayMessage(Component.literal("[Simple Skin] Rotated to " + next.name()));
+        });
+        if (config.watchDropFolder()) {
+            dropFolder.tick(imported -> client.execute(() -> {
+                if (client.player != null) {
+                    client.player.sendOverlayMessage(Component.literal(
+                            "[Simple Skin] Imported " + imported.size() + " skin(s) from the import folder"));
+                }
+            }));
+        }
+    }
+
+    private static Consumer<String> actionBar(Minecraft client) {
+        return message -> {
+            if (client.player != null) {
+                client.player.sendOverlayMessage(Component.literal("[Simple Skin] " + message));
+            }
+        };
     }
 }

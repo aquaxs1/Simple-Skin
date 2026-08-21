@@ -60,6 +60,36 @@ public final class SimpleSkinConfig {
         save();
     }
 
+    /** Minutes between automatic skin rotations; {@code 0} disables the rotation. */
+    public synchronized int rotationMinutes() {
+        return Math.max(0, values.rotationMinutes);
+    }
+
+    public synchronized void setRotationMinutes(int rotationMinutes) {
+        values.rotationMinutes = Math.max(0, rotationMinutes);
+        save();
+    }
+
+    /** Whether PNGs dropped into {@code config/simple-skin/import} are picked up automatically. */
+    public synchronized boolean watchDropFolder() {
+        return values.watchDropFolder;
+    }
+
+    public synchronized void setWatchDropFolder(boolean watchDropFolder) {
+        values.watchDropFolder = watchDropFolder;
+        save();
+    }
+
+    /** Whether a skin change is broadcast to other Simple Skin players on a supporting server. */
+    public synchronized boolean liveSync() {
+        return values.liveSync;
+    }
+
+    public synchronized void setLiveSync(boolean liveSync) {
+        values.liveSync = liveSync;
+        save();
+    }
+
     private void save() {
         try {
             Files.createDirectories(file.getParent());
@@ -109,5 +139,8 @@ public final class SimpleSkinConfig {
     private static final class Values {
         private Visibility visibility = Visibility.PROFILE;
         private boolean uploadOnHotkey = true;
+        private int rotationMinutes;
+        private boolean watchDropFolder = true;
+        private boolean liveSync = true;
     }
 }

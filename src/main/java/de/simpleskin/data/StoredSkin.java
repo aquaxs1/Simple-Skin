@@ -9,6 +9,8 @@ public final class StoredSkin {
     private String sourcePlayer;
     private String digest;
     private SkinModel model;
+    private CapeChoice capeChoice = CapeChoice.KEEP;
+    private String capeId;
     private boolean saved;
     private long createdAt;
     private long lastEquippedAt;
@@ -54,6 +56,27 @@ public final class StoredSkin {
 
     public void setDigest(String digest) {
         this.digest = digest;
+    }
+
+    /**
+     * What this outfit does with the cape. Mojang only lets an account pick among the capes it
+     * already owns, so a cape can be kept, hidden, or set to one the player owns — never uploaded.
+     */
+    public CapeChoice capeChoice() {
+        return capeChoice == null ? CapeChoice.KEEP : capeChoice;
+    }
+
+    public void setCapeChoice(CapeChoice capeChoice) {
+        this.capeChoice = capeChoice;
+    }
+
+    /** The owned cape id this outfit selects, when {@link #capeChoice()} is {@code SPECIFIC}. */
+    public String capeId() {
+        return capeId;
+    }
+
+    public void setCapeId(String capeId) {
+        this.capeId = capeId;
     }
 
     public SkinModel model() {

@@ -3,9 +3,11 @@ package de.simpleskin.screen;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.simpleskin.SimpleSkinClient;
+import de.simpleskin.data.CapeChoice;
 import de.simpleskin.data.SimpleSkinConfig;
 import de.simpleskin.data.SkinModel;
 import de.simpleskin.data.StoredSkin;
+import de.simpleskin.skin.MinecraftSkinUploadService;
 import de.simpleskin.skin.SkinOverrideManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -53,6 +55,8 @@ public final class SkinSettingsScreen extends Screen {
     private ThemedButton saveButton;
     private ThemedButton deleteButton;
     private RemotePlayer previewPlayer;
+    private java.util.List<MinecraftSkinUploadService.ProfileCape> ownedCapes = java.util.List.of();
+    private boolean capesRequested;
 
     public SkinSettingsScreen(Screen parent, StoredSkin skin) {
         super(Component.literal("Skin settings"));
@@ -106,22 +110,42 @@ public final class SkinSettingsScreen extends Screen {
         addRenderableWidget(keyButton);
 
         SimpleSkinConfig.Visibility visibility = mod.config().visibility();
-        addRenderableWidget(new ThemedButton(x, panelY + 204, fieldWidth, 20,
+        addRenderableWidget(new ThemedButton(x, panelY + 222, fieldWidth, 20,
                 Component.literal("Visibility: " + visibility.label()), ignored -> {
                     mod.config().setVisibility(mod.config().visibility().next());
                     rebuildWidgets();
                 }, false).tooltip(Component.literal(visibility.description())));
 
-        addRenderableWidget(new ThemedButton(x, panelY + 236, half, 20, Component.literal("Export PNG"),
+        addRenderableWidget(new ThemedButton(x, panelY + 190, half, 20,
+                Component.literal(skin.capeChoice().label()), ignored -> {
+                    skin.setCapeChoice(skin.capeChoice().next());
+                    persist();
+                    if (skin.capeChoice() == CapeChoice.SPECIFIC) {
+                        loadCapes();
+                    }
+                    rebuildWidgets();
+                }, false).tooltip(Component.literal(
+                        "Mojang only allows capes your account already owns; none can be uploaded")));
+        ThemedButton capePick = new ThemedButton(x + half + 6, panelY + 190, half, 20,
+                Component.literal(capeLabel()), ignored -> cycleCape(), false);
+        if (skin.capeChoice() != CapeChoice.SPECIFIC || ownedCapes.isEmpty()) {
+            capePick.disabled();
+        }
+        addRenderableWidget(capePick);
+
+        addRenderableWidget(new ThemedButton(x, panelY + 254, half, 20, Component.literal("Export PNG"),
                 ignored -> export(), false));
-        saveButton = new ThemedButton(x + half + 6, panelY + 236, half, 20,
+        addRenderableWidget(new ThemedButton(x, panelY + 306, fieldWidth, 20, Component.literal("Edit skin"),
+                ignored -> minecraft.gui.setScreen(new SkinEditorScreen(this, skin)), false)
+                .tooltip(Component.literal("Layers, head swap and colour replace")));
+        saveButton = new ThemedButton(x + half + 6, panelY + 254, half, 20,
                 Component.literal(skin.saved() ? "Saved" : "Save"), ignored -> save(), false);
         if (skin.saved()) {
             saveButton.disabled();
         }
         addRenderableWidget(saveButton);
 
-        deleteButton = new ThemedButton(x, panelY + 262, fieldWidth, 20,
+        deleteButton = new ThemedButton(x, panelY + 280, fieldWidth, 20,
                 Component.literal(confirmingDelete ? "Click again to delete" : "Delete skin"),
                 ignored -> delete(), ThemedButton.Style.DANGER);
         addRenderableWidget(deleteButton);
@@ -146,6 +170,56 @@ public final class SkinSettingsScreen extends Screen {
         } catch (IOException ignored) {
             status = "The preview PNG could not be loaded.";
         }
+        rebuildWidgets();
+    }
+
+    /** Fetches the capes this account owns, once, so the picker has something to cycle through. */
+    private void loadCapes() {
+        if (capesRequested) {
+            return;
+        }
+        capesRequested = true;
+        mod.uploads().fetchCapes().thenAccept(capes -> minecraft.execute(() -> {
+            ownedCapes = capes;
+            if (capes.isEmpty()) {
+                status = "This account owns no capes.";
+            }
+            rebuildWidgets();
+        }));
+    }
+
+    private String capeLabel() {
+        if (skin.capeChoice() != CapeChoice.SPECIFIC) {
+            return "—";
+        }
+        if (ownedCapes.isEmpty()) {
+            return capesRequested ? "no capes" : "load capes";
+        }
+        return ownedCapes.stream()
+                .filter(cape -> cape.id().equals(skin.capeId()))
+                .findFirst()
+                .map(MinecraftSkinUploadService.ProfileCape::alias)
+                .orElse(ownedCapes.get(0).alias());
+    }
+
+    /** Steps to the next owned cape and pre-loads its texture so the preview updates. */
+    private void cycleCape() {
+        if (ownedCapes.isEmpty()) {
+            loadCapes();
+            return;
+        }
+        int current = 0;
+        for (int index = 0; index < ownedCapes.size(); index++) {
+            if (ownedCapes.get(index).id().equals(skin.capeId())) {
+                current = index + 1;
+                break;
+            }
+        }
+        MinecraftSkinUploadService.ProfileCape chosen = ownedCapes.get(current % ownedCapes.size());
+        skin.setCapeId(chosen.id());
+        persist();
+        mod.capes().load(chosen.id(), chosen.url()).thenAccept(ignored -> minecraft.execute(this::rebuildWidgets));
+        status = "Cape set to " + chosen.alias() + ".";
         rebuildWidgets();
     }
 
@@ -226,8 +300,9 @@ public final class SkinSettingsScreen extends Screen {
         graphics.text(font, "NAME", labelX, panelY + 53, SimpleSkinTheme.PAPER_MUTED, false);
         graphics.text(font, "MODEL", labelX, panelY + 99, SimpleSkinTheme.PAPER_MUTED, false);
         graphics.text(font, "QUICK EQUIP", labelX, panelY + 145, SimpleSkinTheme.PAPER_MUTED, false);
-        graphics.text(font, "WHO SEES IT", labelX, panelY + 191, SimpleSkinTheme.PAPER_MUTED, false);
-        graphics.text(font, "ACTIONS", labelX, panelY + 223, SimpleSkinTheme.PAPER_MUTED, false);
+        graphics.text(font, "WHO SEES IT", labelX, panelY + 212, SimpleSkinTheme.PAPER_MUTED, false);
+        graphics.text(font, "CAPE", labelX, panelY + 180, SimpleSkinTheme.PAPER_MUTED, false);
+        graphics.text(font, "ACTIONS", labelX, panelY + 242, SimpleSkinTheme.PAPER_MUTED, false);
 
         graphics.text(font, font.plainSubstrByWidth(status, panelWidth - 230),
                 panelX + 190, panelY + panelHeight - 27, SimpleSkinTheme.PAPER_MUTED, false);

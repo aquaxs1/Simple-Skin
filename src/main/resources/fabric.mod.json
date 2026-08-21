@@ -4,13 +4,21 @@
   "version": "${version}",
   "name": "Simple Skin",
   "description": "Switch, save, copy, import and export Minecraft skins without restarting, and make the change visible to other players.",
-  "authors": ["Simple Skin contributors"],
+  "authors": [
+    "Simple Skin contributors"
+  ],
   "contact": {},
   "license": "MIT",
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
     "client": [
       "de.simpleskin.SimpleSkinClient"
+    ],
+    "main": [
+      "de.simpleskin.net.SimpleSkinServer"
+    ],
+    "server": [
+      "de.simpleskin.net.SimpleSkinServer"
     ]
   },
   "mixins": [

@@ -153,6 +153,95 @@ public final class MinecraftSkinUploadService {
         }
     }
 
+    /** Lists the capes this account owns. Mojang only allows choosing among these; none can be uploaded. */
+    public CompletableFuture<java.util.List<ProfileCape>> fetchCapes() {
+        String token = accessToken();
+        if (token == null) {
+            return CompletableFuture.completedFuture(java.util.List.of());
+        }
+        HttpRequest request = HttpRequest.newBuilder(PROFILE_ENDPOINT)
+                .timeout(Duration.ofSeconds(15))
+                .header("Authorization", "Bearer " + token)
+                .header("Accept", "application/json")
+                .header("User-Agent", "Simple-Skin/2.0")
+                .GET()
+                .build();
+        return http.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .handle((response, error) -> {
+                    if (error != null || response.statusCode() / 100 != 2) {
+                        return java.util.List.<ProfileCape>of();
+                    }
+                    return parseCapes(response.body());
+                });
+    }
+
+    public static java.util.List<ProfileCape> parseCapes(String json) {
+        java.util.List<ProfileCape> capes = new java.util.ArrayList<>();
+        try {
+            JsonElement parsed = JsonParser.parseString(json);
+            if (!parsed.isJsonObject()) {
+                return capes;
+            }
+            JsonElement element = parsed.getAsJsonObject().get("capes");
+            if (element == null || !element.isJsonArray()) {
+                return capes;
+            }
+            for (JsonElement entry : element.getAsJsonArray()) {
+                if (!entry.isJsonObject()) {
+                    continue;
+                }
+                JsonObject cape = entry.getAsJsonObject();
+                if (!cape.has("id")) {
+                    continue;
+                }
+                capes.add(new ProfileCape(
+                        cape.get("id").getAsString(),
+                        cape.has("alias") ? cape.get("alias").getAsString() : "Cape",
+                        cape.has("url") ? cape.get("url").getAsString() : null,
+                        cape.has("state") && "ACTIVE".equalsIgnoreCase(cape.get("state").getAsString())));
+            }
+        } catch (RuntimeException exception) {
+            return java.util.List.of();
+        }
+        return capes;
+    }
+
+    /**
+     * Switches the profile's active cape, or hides it when {@code capeId} is {@code null}.
+     * This is a real profile change, so other players see it the same way they see a new skin.
+     */
+    public CompletableFuture<UploadResult> setActiveCape(String capeId) {
+        String token = accessToken();
+        if (token == null) {
+            return CompletableFuture.completedFuture(UploadResult.failed("No online session, so the cape stays as it is."));
+        }
+        URI endpoint = URI.create("https://api.minecraftservices.com/minecraft/profile/capes/active");
+        HttpRequest.Builder builder = HttpRequest.newBuilder(endpoint)
+                .timeout(Duration.ofSeconds(15))
+                .header("Authorization", "Bearer " + token)
+                .header("Accept", "application/json")
+                .header("User-Agent", "Simple-Skin/2.0");
+        HttpRequest request = capeId == null
+                ? builder.DELETE().build()
+                : builder.header("Content-Type", "application/json")
+                        .PUT(HttpRequest.BodyPublishers.ofString("{\"capeId\":\"" + capeId.replace("\"", "") + "\"}"))
+                        .build();
+        return http.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .handle((response, error) -> {
+                    if (error != null) {
+                        return UploadResult.failed("Mojang could not be reached for the cape change.");
+                    }
+                    if (response.statusCode() / 100 == 2) {
+                        return new UploadResult(true, null, capeId == null ? "Cape hidden." : "Cape applied.");
+                    }
+                    return UploadResult.failed("Cape change returned " + describe(response.statusCode()));
+                });
+    }
+
+    /** A cape the signed-in account owns. */
+    public record ProfileCape(String id, String alias, String url, boolean active) {
+    }
+
     private static String accessToken() {
         Minecraft client = Minecraft.getInstance();
         String token = client.getUser() == null ? null : client.getUser().getAccessToken();
