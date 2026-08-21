@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
 import de.simpleskin.data.SkinModel;
 import de.simpleskin.data.SkinRepository;
 import de.simpleskin.data.StoredSkin;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -126,7 +126,7 @@ public final class MinecraftSkinUploadService {
                 });
     }
 
-    static Optional<URI> parseActiveSkinUrl(String json) {
+    public static Optional<URI> parseActiveSkinUrl(String json) {
         try {
             JsonElement parsed = JsonParser.parseString(json);
             if (!parsed.isJsonObject()) {
@@ -154,8 +154,8 @@ public final class MinecraftSkinUploadService {
     }
 
     private static String accessToken() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        String token = client.getSession() == null ? null : client.getSession().getAccessToken();
+        Minecraft client = Minecraft.getInstance();
+        String token = client.getUser() == null ? null : client.getUser().getAccessToken();
         if (token == null || token.isBlank() || "0".equals(token) || "FabricMC".equals(token)) {
             return null;
         }

@@ -1,6 +1,6 @@
 package de.simpleskin.screen;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -28,7 +28,7 @@ public final class SkinFilePicker {
      * thread. {@code accept} receives {@code null} when the dialog was cancelled or unavailable.
      */
     public static void pickPngAsync(Consumer<Path> accept) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         Thread thread = new Thread(() -> {
             Path chosen = pickPng();
             client.execute(() -> accept.accept(chosen));

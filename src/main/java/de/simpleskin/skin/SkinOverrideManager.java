@@ -1,9 +1,9 @@
 package de.simpleskin.skin;
 
 import de.simpleskin.data.SkinModel;
-import net.minecraft.entity.player.SkinTextures;
-import net.minecraft.util.AssetInfo;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.ClientAsset;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.PlayerSkin;
 
 import java.util.Map;
 import java.util.UUID;
@@ -20,8 +20,7 @@ public final class SkinOverrideManager {
         if (previous != null && previous.texture().equals(texture) && previous.model() == model) {
             return;
         }
-        OVERRIDES.put(playerId, new Override(texture, model,
-                new AssetInfo.TextureAssetInfo(texture, texture)));
+        OVERRIDES.put(playerId, new Override(texture, model, new ClientAsset.ResourceTexture(texture, texture)));
     }
 
     public static void clear(UUID playerId) {
@@ -35,13 +34,14 @@ public final class SkinOverrideManager {
     /**
      * Swaps the body texture of {@code original} for the equipped skin.
      *
-     * <p>This runs from {@code AbstractClientPlayerEntity#getSkin}, which the renderer calls for
-     * every visible player on every frame, so the derived {@link SkinTextures} is memoised per
-     * override and only rebuilt when the source textures actually change. Cape, elytra and the
-     * {@code secure} flag are carried over untouched: dropping them used to strip a player's cape
-     * and mark the skin insecure the moment a skin was equipped.
+     * <p>This runs from {@code AbstractClientPlayer#getSkin}, which the renderer calls for every
+     * visible player on every frame, so the derived {@link PlayerSkin} is memoised per override
+     * and only rebuilt when the source skin actually changes. Cape, elytra and the {@code secure}
+     * flag are carried over untouched: dropping them used to strip a player's cape and mark the
+     * skin insecure the moment a skin was equipped. Minecraft's own {@code PlayerSkin#with} is not
+     * used because it routes through {@code insecure(...)}, which clears that same flag.
      */
-    public static SkinTextures apply(UUID playerId, SkinTextures original) {
+    public static PlayerSkin apply(UUID playerId, PlayerSkin original) {
         Override override = OVERRIDES.get(playerId);
         if (override == null || original == null) {
             return original;
@@ -52,11 +52,11 @@ public final class SkinOverrideManager {
     private static final class Override {
         private final Identifier texture;
         private final SkinModel model;
-        private final AssetInfo.TextureAssetInfo body;
-        private volatile SkinTextures cachedSource;
-        private volatile SkinTextures cachedResult;
+        private final ClientAsset.ResourceTexture body;
+        private volatile PlayerSkin cachedSource;
+        private volatile PlayerSkin cachedResult;
 
-        private Override(Identifier texture, SkinModel model, AssetInfo.TextureAssetInfo body) {
+        private Override(Identifier texture, SkinModel model, ClientAsset.ResourceTexture body) {
             this.texture = texture;
             this.model = model;
             this.body = body;
@@ -70,13 +70,13 @@ public final class SkinOverrideManager {
             return model;
         }
 
-        private SkinTextures derive(SkinTextures original) {
-            SkinTextures source = cachedSource;
-            SkinTextures result = cachedResult;
+        private PlayerSkin derive(PlayerSkin original) {
+            PlayerSkin source = cachedSource;
+            PlayerSkin result = cachedResult;
             if (source != null && source.equals(original) && result != null) {
                 return result;
             }
-            SkinTextures derived = new SkinTextures(body, original.cape(), original.elytra(),
+            PlayerSkin derived = new PlayerSkin(body, original.cape(), original.elytra(),
                     model.toMinecraft(), original.secure());
             cachedSource = original;
             cachedResult = derived;

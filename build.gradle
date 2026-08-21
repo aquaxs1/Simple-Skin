@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom-no-remap' version "${loom_version}"
     id 'maven-publish'
 }
 
@@ -16,9 +16,10 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // Minecraft 26.2 is shipped with its real names, so nothing is remapped and mod
+    // dependencies are ordinary dependencies rather than modImplementation entries.
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
@@ -29,29 +30,29 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 21
+    options.release = 25
     options.encoding = 'UTF-8'
 }
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
-tasks.register('skinOverrideRegressionTest', JavaExec) {
+tasks.register('skinRegressionTest', JavaExec) {
     group = 'verification'
-    description = 'Verifies that the equipped skin points at the registered dynamic texture.'
+    description = 'Runs the Simple Skin regression checks that do not need a game instance.'
     dependsOn testClasses
     classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'de.simpleskin.skin.SkinOverrideRegressionTest'
+    mainClass = 'de.simpleskin.SimpleSkinRegressionTest'
 }
 
 tasks.named('test') {
     failOnNoDiscoveredTests = false
 }
 
-check.dependsOn skinOverrideRegressionTest
+check.dependsOn skinRegressionTest
 
 jar {
     from('LICENSE') {

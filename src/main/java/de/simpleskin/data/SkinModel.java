@@ -1,13 +1,13 @@
 package de.simpleskin.data;
 
-import net.minecraft.entity.player.PlayerSkinType;
+import net.minecraft.world.entity.player.PlayerModelType;
 
 public enum SkinModel {
     WIDE,
     SLIM;
 
-    public PlayerSkinType toMinecraft() {
-        return this == SLIM ? PlayerSkinType.SLIM : PlayerSkinType.WIDE;
+    public PlayerModelType toMinecraft() {
+        return this == SLIM ? PlayerModelType.SLIM : PlayerModelType.WIDE;
     }
 
     public static SkinModel fromMetadata(String model) {

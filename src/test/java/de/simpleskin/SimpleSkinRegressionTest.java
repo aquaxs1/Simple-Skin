@@ -1,10 +1,12 @@
-package de.simpleskin.skin;
+package de.simpleskin;
 
 import de.simpleskin.data.SkinModel;
-import net.minecraft.entity.player.PlayerSkinType;
-import net.minecraft.entity.player.SkinTextures;
-import net.minecraft.util.AssetInfo;
-import net.minecraft.util.Identifier;
+import de.simpleskin.skin.MinecraftSkinUploadService;
+import de.simpleskin.skin.SkinOverrideManager;
+import net.minecraft.core.ClientAsset;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.entity.player.PlayerSkin;
 
 import java.net.URI;
 import java.util.Optional;
@@ -13,11 +15,11 @@ import java.util.UUID;
 /**
  * Runs without a game instance: every case below only touches plain records and pure helpers.
  */
-public final class SkinOverrideRegressionTest {
+public final class SimpleSkinRegressionTest {
     private static final UUID PLAYER = UUID.fromString("7aa56f75-86a4-4bfe-9d9d-801c03e9d8e1");
-    private static final Identifier SKIN_TEXTURE = Identifier.of("simple_skin", "skins/regression");
+    private static final Identifier SKIN_TEXTURE = Identifier.fromNamespaceAndPath("simple_skin", "skins/regression");
 
-    private SkinOverrideRegressionTest() {
+    private SimpleSkinRegressionTest() {
     }
 
     public static void main(String[] args) {
@@ -33,19 +35,20 @@ public final class SkinOverrideRegressionTest {
     /** The renderer must receive the texture the mod registered, not the profile's skin. */
     private static void equippedSkinPointsAtRegisteredTexture() {
         withOverride(SkinModel.WIDE, () -> {
-            SkinTextures result = SkinOverrideManager.apply(PLAYER, original(true));
+            PlayerSkin result = SkinOverrideManager.apply(PLAYER, original(true));
             assertEquals(SKIN_TEXTURE, result.body().texturePath(), "rendered body texture");
         });
     }
 
     /**
-     * Regression: the override used to rebuild SkinTextures from scratch with secure=false, which
-     * stripped the player's cape and elytra the moment a skin was equipped.
+     * Regression: the override used to rebuild the skin from scratch with secure=false, which
+     * stripped the player's cape and elytra the moment a skin was equipped. Minecraft's own
+     * {@code PlayerSkin#with} still does exactly that, so this guards the hand-rolled copy.
      */
     private static void overrideKeepsCapeElytraAndSecureFlag() {
         withOverride(SkinModel.WIDE, () -> {
-            SkinTextures source = original(true);
-            SkinTextures result = SkinOverrideManager.apply(PLAYER, source);
+            PlayerSkin source = original(true);
+            PlayerSkin result = SkinOverrideManager.apply(PLAYER, source);
             assertEquals(source.cape(), result.cape(), "cape");
             assertEquals(source.elytra(), result.elytra(), "elytra");
             assertEquals(true, result.secure(), "secure flag");
@@ -58,19 +61,19 @@ public final class SkinOverrideRegressionTest {
      */
     private static void overrideIsNotRebuiltForUnchangedTextures() {
         withOverride(SkinModel.WIDE, () -> {
-            SkinTextures source = original(true);
-            SkinTextures first = SkinOverrideManager.apply(PLAYER, source);
-            SkinTextures second = SkinOverrideManager.apply(PLAYER, source);
+            PlayerSkin source = original(true);
+            PlayerSkin first = SkinOverrideManager.apply(PLAYER, source);
+            PlayerSkin second = SkinOverrideManager.apply(PLAYER, source);
             if (first != second) {
-                throw new AssertionError("apply() allocated a new SkinTextures for unchanged input");
+                throw new AssertionError("apply() allocated a new PlayerSkin for unchanged input");
             }
         });
     }
 
     private static void slimModelSurvivesTheOverride() {
         withOverride(SkinModel.SLIM, () -> {
-            SkinTextures result = SkinOverrideManager.apply(PLAYER, original(true));
-            assertEquals(PlayerSkinType.SLIM, result.model(), "skin model");
+            PlayerSkin result = SkinOverrideManager.apply(PLAYER, original(true));
+            assertEquals(PlayerModelType.SLIM, result.model(), "skin model");
         });
     }
 
@@ -89,12 +92,12 @@ public final class SkinOverrideRegressionTest {
         assertEquals(Optional.empty(), MinecraftSkinUploadService.parseActiveSkinUrl("not json"), "malformed body");
     }
 
-    private static SkinTextures original(boolean secure) {
-        return new SkinTextures(
-                new AssetInfo.TextureAssetInfo(Identifier.of("minecraft", "entity/player/wide/steve")),
-                new AssetInfo.TextureAssetInfo(Identifier.of("minecraft", "entity/cape/regression")),
-                new AssetInfo.TextureAssetInfo(Identifier.of("minecraft", "entity/elytra/regression")),
-                PlayerSkinType.WIDE,
+    private static PlayerSkin original(boolean secure) {
+        return new PlayerSkin(
+                new ClientAsset.ResourceTexture(Identifier.fromNamespaceAndPath("minecraft", "entity/player/wide/steve")),
+                new ClientAsset.ResourceTexture(Identifier.fromNamespaceAndPath("minecraft", "entity/cape/regression")),
+                new ClientAsset.ResourceTexture(Identifier.fromNamespaceAndPath("minecraft", "entity/elytra/regression")),
+                PlayerModelType.WIDE,
                 secure);
     }
 

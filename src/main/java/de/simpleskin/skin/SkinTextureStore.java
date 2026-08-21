@@ -1,12 +1,12 @@
 package de.simpleskin.skin;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import de.simpleskin.data.SkinRepository;
 import de.simpleskin.data.StoredSkin;
-import de.simpleskin.mixin.PlayerSkinTextureDownloaderInvoker;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.util.Identifier;
+import de.simpleskin.mixin.SkinTextureDownloaderInvoker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +32,8 @@ public final class SkinTextureStore {
     /**
      * Registers the skin PNG with the texture manager and returns its identifier.
      *
-     * <p>Must be called on the render thread; {@code TextureManager#registerTexture} is not
-     * thread safe, which is why this is no longer backed by a concurrent map.
+     * <p>Must be called on the render thread; {@code TextureManager#register} is not thread safe,
+     * which is why this is no longer backed by a concurrent map.
      */
     public Identifier getOrLoad(StoredSkin skin) throws IOException {
         Identifier cached = textures.get(skin.id());
@@ -43,13 +43,13 @@ public final class SkinTextureStore {
         if (failed.contains(skin.id())) {
             throw new IOException("The skin PNG for " + skin.name() + " could not be loaded");
         }
-        Identifier identifier = Identifier.of("simple_skin", "skins/" + skin.id().replace("-", ""));
+        Identifier identifier = Identifier.fromNamespaceAndPath("simple_skin", "skins/" + skin.id().replace("-", ""));
         try (InputStream input = Files.newInputStream(repository.imagePath(skin))) {
             NativeImage image = NativeImage.read(input);
-            // remapTexture converts legacy 64x32 skins and closes the image it replaces.
-            image = PlayerSkinTextureDownloaderInvoker.simpleSkin$remapTexture(image, skin.name());
-            NativeImageBackedTexture texture = new NativeImageBackedTexture(() -> "Simple Skin: " + skin.name(), image);
-            MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, texture);
+            // processLegacySkin converts 64x32 skins and closes the image it replaces.
+            image = SkinTextureDownloaderInvoker.simpleSkin$processLegacySkin(image, skin.name());
+            DynamicTexture texture = new DynamicTexture(() -> "Simple Skin: " + skin.name(), image);
+            Minecraft.getInstance().getTextureManager().register(identifier, texture);
         } catch (IOException | RuntimeException exception) {
             failed.add(skin.id());
             throw exception instanceof IOException io ? io
@@ -64,7 +64,7 @@ public final class SkinTextureStore {
         failed.remove(skin.id());
         Identifier identifier = textures.remove(skin.id());
         if (identifier != null) {
-            MinecraftClient.getInstance().getTextureManager().destroyTexture(identifier);
+            Minecraft.getInstance().getTextureManager().release(identifier);
         }
     }
 }

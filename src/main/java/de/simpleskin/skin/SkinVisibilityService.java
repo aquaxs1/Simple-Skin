@@ -3,7 +3,7 @@ package de.simpleskin.skin;
 import de.simpleskin.data.SimpleSkinConfig;
 import de.simpleskin.data.SkinRepository;
 import de.simpleskin.data.StoredSkin;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 import java.net.URI;
 import java.nio.file.Files;
@@ -64,7 +64,7 @@ public final class SkinVisibilityService {
      * The callback is always invoked on the client thread.
      */
     public void publish(StoredSkin skin, Path png, Consumer<String> status) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         SimpleSkinConfig.Visibility visibility = config.visibility();
         if (visibility == SimpleSkinConfig.Visibility.LOCAL_ONLY) {
             status.accept("Equipped for you only (visibility: " + visibility.label() + ").");
@@ -110,13 +110,13 @@ public final class SkinVisibilityService {
      * is what everyone else sees.
      */
     public void rejoinNow(Consumer<String> status) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (!ServerReconnector.canRejoin()) {
             status.accept("Rejoining only works on a multiplayer server.");
             return;
         }
         if (client.player != null) {
-            SkinOverrideManager.clear(client.player.getUuid());
+            SkinOverrideManager.clear(client.player.getUUID());
         }
         rejoinPending = false;
         ServerReconnector.rejoin(status);
