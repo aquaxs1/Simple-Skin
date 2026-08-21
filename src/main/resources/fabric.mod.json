@@ -3,7 +3,7 @@
   "id": "simple_skin",
   "version": "${version}",
   "name": "Simple Skin",
-  "description": "Switch, save, copy and export Minecraft skins without restarting.",
+  "description": "Switch, save, copy, import and export Minecraft skins without restarting, and make the change visible to other players.",
   "authors": ["Simple Skin contributors"],
   "contact": {},
   "license": "MIT",

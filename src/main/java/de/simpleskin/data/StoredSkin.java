@@ -7,6 +7,7 @@ public final class StoredSkin {
     private String name;
     private String imageFile;
     private String sourcePlayer;
+    private String digest;
     private SkinModel model;
     private boolean saved;
     private long createdAt;
@@ -44,6 +45,15 @@ public final class StoredSkin {
 
     public String sourcePlayer() {
         return sourcePlayer;
+    }
+
+    /** SHA-256 of the stored PNG, used to keep the library free of duplicates. */
+    public String digest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
     }
 
     public SkinModel model() {

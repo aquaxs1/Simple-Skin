@@ -1,6 +1,7 @@
 package de.simpleskin.screen;
 
 import de.simpleskin.SimpleSkinClient;
+import de.simpleskin.data.SimpleSkinConfig;
 import de.simpleskin.data.StoredSkin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -19,6 +20,8 @@ public final class SkinLibraryScreen extends Screen {
     private static final int CARD_WIDTH = 148;
     private static final int CARD_HEIGHT = 174;
     private static final int GAP = 10;
+    /** Ticks between refreshes of the player list, so joins and leaves show up while open. */
+    private static final int PLAYER_REFRESH_TICKS = 40;
 
     private final SimpleSkinClient mod = SimpleSkinClient.get();
     private Tab tab = Tab.SAVED;
@@ -28,8 +31,13 @@ public final class SkinLibraryScreen extends Screen {
     private int panelHeight;
     private int contentTop;
     private int contentBottom;
-    private int scroll;
-    private int maxScroll;
+    private int columns = 1;
+    private int visibleRows = 1;
+    /** Scroll position in whole rows: every rendered card is fully visible and fully clickable. */
+    private int scrollRow;
+    private int maxScrollRow;
+    private int playerRefreshTimer;
+    private int lastPlayerCount = -1;
     private String status = "K opens Simple Skin anywhere in-game.";
     private List<Card> cards = List.of();
 
@@ -46,53 +54,64 @@ public final class SkinLibraryScreen extends Screen {
         contentTop = panelY + 74;
         contentBottom = panelY + panelHeight - 34;
 
-        addTab(Tab.HISTORY, panelX + 18, "History");
-        addTab(Tab.SAVED, panelX + 122, "Change Skin");
-        addTab(Tab.STEAL, panelX + 250, "Steal Skin");
+        int tabX = panelX + 18;
+        for (Tab target : Tab.values()) {
+            int tabWidth = textRenderer.getWidth(target.label) + 22;
+            addTab(target, tabX, tabWidth);
+            tabX += tabWidth + 6;
+        }
+        addDrawableChild(new ThemedButton(panelX + panelWidth - 96, panelY + 42, 78, 22,
+                Text.literal("Import PNG"), ignored -> importSkin(), false)
+                .tooltip(Text.literal("Load a 64x64 skin PNG from your computer")));
 
         cards = buildCards();
-        int columns = Math.max(1, (panelWidth - 36 + GAP) / (CARD_WIDTH + GAP));
+        columns = Math.max(1, (panelWidth - 36 + GAP) / (CARD_WIDTH + GAP));
+        visibleRows = Math.max(1, (contentBottom - contentTop + GAP) / (CARD_HEIGHT + GAP));
         int rows = (cards.size() + columns - 1) / columns;
-        maxScroll = Math.max(0, rows * (CARD_HEIGHT + GAP) - GAP - (contentBottom - contentTop));
-        scroll = Math.min(scroll, maxScroll);
+        maxScrollRow = Math.max(0, rows - visibleRows);
+        scrollRow = Math.max(0, Math.min(scrollRow, maxScrollRow));
 
         for (int index = 0; index < cards.size(); index++) {
             int column = index % columns;
             int row = index / columns;
-            int x = panelX + 18 + column * (CARD_WIDTH + GAP);
-            int y = contentTop + row * (CARD_HEIGHT + GAP) - scroll;
             Card card = cards.get(index);
-            card.x = x;
-            card.y = y;
-            if (y >= contentTop && y + CARD_HEIGHT <= contentBottom) {
+            card.x = panelX + 18 + column * (CARD_WIDTH + GAP);
+            card.y = contentTop + (row - scrollRow) * (CARD_HEIGHT + GAP);
+            card.visible = row >= scrollRow && row < scrollRow + visibleRows;
+            if (card.visible) {
                 addCardButtons(card);
             }
         }
+
+        if (mod.visibility().rejoinPending()) {
+            addDrawableChild(new ThemedButton(panelX + panelWidth - 96, panelY + panelHeight - 30, 78, 20,
+                    Text.literal("Rejoin now"), ignored -> mod.visibility().rejoinNow(this::setStatus), true)
+                    .tooltip(Text.literal("Reconnect so other players load your new skin")));
+        }
     }
 
-    private void addTab(Tab target, int x, String label) {
-        ThemedButton button = new ThemedButton(x, panelY + 42, target == Tab.SAVED ? 116 : 92, 22,
-                Text.literal(label), ignored -> {
-                    tab = target;
-                    scroll = 0;
-                    clearAndInit();
-                }, tab == target);
-        addDrawableChild(button);
+    private void addTab(Tab target, int x, int tabWidth) {
+        addDrawableChild(new ThemedButton(x, panelY + 42, tabWidth, 22, Text.literal(target.label), ignored -> {
+            if (tab != target) {
+                tab = target;
+                scrollRow = 0;
+            }
+            clearAndInit();
+        }, tab == target));
     }
 
     private void addCardButtons(Card card) {
         int y = card.y + CARD_HEIGHT - 29;
-        ThemedButton equip = new ThemedButton(card.x + 8, y, 56, 20, Text.literal("Equip"), ignored -> equip(card), true);
-        ThemedButton save = new ThemedButton(card.x + 68, y, 43, 20,
-                Text.literal(card.skin != null && card.skin.saved() ? "Saved" : "Save"), ignored -> save(card), false);
-        if (card.skin != null && card.skin.saved()) {
-            save.active = false;
+        addDrawableChild(new ThemedButton(card.x + 8, y, 52, 20, Text.literal("Equip"), ignored -> equip(card), true));
+        boolean alreadySaved = card.skin != null && card.skin.saved();
+        ThemedButton save = new ThemedButton(card.x + 64, y, 42, 20,
+                Text.literal(alreadySaved ? "Saved" : "Save"), ignored -> save(card), false);
+        if (alreadySaved) {
+            save.disabled();
         }
-        ThemedButton settings = new ThemedButton(card.x + 115, y, 25, 20, Text.literal("\u2699"), ignored -> settings(card), false)
-                .tooltip(Text.literal("Skin settings"));
-        addDrawableChild(equip);
         addDrawableChild(save);
-        addDrawableChild(settings);
+        addDrawableChild(new ThemedButton(card.x + 110, y, 30, 20, Text.literal("⚙"),
+                ignored -> settings(card), false).tooltip(Text.literal("Skin settings")));
     }
 
     private List<Card> buildCards() {
@@ -132,7 +151,7 @@ public final class SkinLibraryScreen extends Screen {
         }
         mod.copy(card.player, true).whenComplete((skin, error) -> MinecraftClient.getInstance().execute(() -> {
             if (error != null) {
-                setStatus("Could not download that player's skin.");
+                setStatus(SimpleSkinClient.describe(error, card.player));
             } else {
                 setStatus("Saved " + skin.name() + " to Change Skin.");
                 clearAndInit();
@@ -148,15 +167,52 @@ public final class SkinLibraryScreen extends Screen {
         setStatus("Preparing " + card.player.getProfile().name() + "...");
         mod.copy(card.player, false).whenComplete((skin, error) -> MinecraftClient.getInstance().execute(() -> {
             if (error != null) {
-                setStatus("Could not download that player's skin.");
+                setStatus(SimpleSkinClient.describe(error, card.player));
             } else {
                 client.setScreen(new SkinSettingsScreen(this, skin));
             }
         }));
     }
 
+    private void importSkin() {
+        setStatus("Choose a skin PNG...");
+        SkinFilePicker.pickPngAsync(chosen -> {
+            if (chosen == null) {
+                setStatus("Import cancelled.");
+                return;
+            }
+            try {
+                StoredSkin imported = mod.repository().importFile(chosen, true);
+                setStatus("Imported " + imported.name() + ".");
+                tab = Tab.SAVED;
+                clearAndInit();
+            } catch (IOException exception) {
+                setStatus("Import failed: " + exception.getMessage());
+            }
+        });
+    }
+
     private void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (tab != Tab.STEAL) {
+            return;
+        }
+        // Rebuild only when the roster actually changed, so the screen does not flicker.
+        if (++playerRefreshTimer < PLAYER_REFRESH_TICKS) {
+            return;
+        }
+        playerRefreshTimer = 0;
+        MinecraftClient minecraft = MinecraftClient.getInstance();
+        int count = minecraft.getNetworkHandler() == null ? 0 : minecraft.getNetworkHandler().getPlayerList().size();
+        if (count != lastPlayerCount) {
+            lastPlayerCount = count;
+            clearAndInit();
+        }
     }
 
     @Override
@@ -166,11 +222,12 @@ public final class SkinLibraryScreen extends Screen {
         context.fill(panelX + 1, panelY + 1, panelX + panelWidth - 1, panelY + panelHeight - 1, SimpleSkinTheme.PANEL);
         context.drawTextWithShadow(textRenderer, Text.literal("SIMPLE SKIN"), panelX + 18, panelY + 16, SimpleSkinTheme.PAPER);
         context.drawText(textRenderer, Text.literal(tab.subtitle), panelX + 112, panelY + 16, SimpleSkinTheme.PAPER_MUTED, false);
+        drawVisibilityBadge(context);
         context.drawHorizontalLine(panelX + 18, panelX + panelWidth - 18, panelY + 34, SimpleSkinTheme.PANEL_EDGE);
 
         context.enableScissor(panelX + 10, contentTop - 2, panelX + panelWidth - 10, contentBottom + 1);
         for (Card card : cards) {
-            if (card.y + CARD_HEIGHT >= contentTop && card.y <= contentBottom) {
+            if (card.visible) {
                 renderCard(context, card, mouseX, mouseY);
             }
         }
@@ -179,27 +236,49 @@ public final class SkinLibraryScreen extends Screen {
         if (cards.isEmpty()) {
             String empty = switch (tab) {
                 case HISTORY -> "Your equipped skins will appear here.";
-                case SAVED -> "Save a server player's skin to start your collection.";
+                case SAVED -> "Steal a skin or import a PNG to start your collection.";
                 case STEAL -> "Join a multiplayer server to see its players.";
             };
             context.drawCenteredTextWithShadow(textRenderer, empty, width / 2, contentTop + 60, SimpleSkinTheme.PAPER_MUTED);
         }
-        if (maxScroll > 0) {
-            int trackHeight = contentBottom - contentTop;
-            int thumbHeight = Math.max(24, trackHeight * trackHeight / (trackHeight + maxScroll));
-            int thumbY = contentTop + (trackHeight - thumbHeight) * scroll / maxScroll;
-            context.fill(panelX + panelWidth - 8, contentTop, panelX + panelWidth - 5, contentBottom, 0xFF252B30);
-            context.fill(panelX + panelWidth - 8, thumbY, panelX + panelWidth - 5, thumbY + thumbHeight, SimpleSkinTheme.COPPER);
-        }
-        context.drawText(textRenderer, Text.literal(status), panelX + 18, panelY + panelHeight - 22,
-                SimpleSkinTheme.PAPER_MUTED, false);
+        drawScrollbar(context);
+
+        int statusWidth = panelWidth - 36 - (mod.visibility().rejoinPending() ? 86 : 0);
+        context.drawText(textRenderer, Text.literal(textRenderer.trimToWidth(status, Math.max(20, statusWidth))),
+                panelX + 18, panelY + panelHeight - 22, SimpleSkinTheme.PAPER_MUTED, false);
         super.render(context, mouseX, mouseY, delta);
     }
 
+    /** Shows where a skin change will end up, so "nobody else sees it" is never a surprise. */
+    private void drawVisibilityBadge(DrawContext context) {
+        SimpleSkinConfig.Visibility visibility = mod.config().visibility();
+        String label = "Visibility: " + visibility.label();
+        int textWidth = textRenderer.getWidth(label);
+        int right = panelX + panelWidth - 18;
+        int color = visibility == SimpleSkinConfig.Visibility.LOCAL_ONLY
+                ? SimpleSkinTheme.PAPER_MUTED
+                : SimpleSkinTheme.EQUIPPED;
+        context.drawText(textRenderer, Text.literal(label), right - textWidth, panelY + 16, color, false);
+    }
+
+    private void drawScrollbar(DrawContext context) {
+        if (maxScrollRow <= 0) {
+            return;
+        }
+        int totalRows = maxScrollRow + visibleRows;
+        int trackHeight = contentBottom - contentTop;
+        int thumbHeight = Math.max(24, trackHeight * visibleRows / totalRows);
+        int thumbY = contentTop + (trackHeight - thumbHeight) * scrollRow / maxScrollRow;
+        context.fill(panelX + panelWidth - 8, contentTop, panelX + panelWidth - 5, contentBottom, 0xFF252B30);
+        context.fill(panelX + panelWidth - 8, thumbY, panelX + panelWidth - 5, thumbY + thumbHeight, SimpleSkinTheme.COPPER);
+    }
+
     private void renderCard(DrawContext context, Card card, int mouseX, int mouseY) {
-        boolean hovered = mouseX >= card.x && mouseX < card.x + CARD_WIDTH && mouseY >= card.y && mouseY < card.y + CARD_HEIGHT;
-        context.fill(card.x, card.y, card.x + CARD_WIDTH, card.y + CARD_HEIGHT,
-                hovered ? SimpleSkinTheme.PAPER : SimpleSkinTheme.PAPER_MUTED);
+        boolean hovered = mouseX >= card.x && mouseX < card.x + CARD_WIDTH
+                && mouseY >= card.y && mouseY < card.y + CARD_HEIGHT;
+        boolean equipped = card.skin != null && card.skin == mod.equippedSkin();
+        int border = equipped ? SimpleSkinTheme.EQUIPPED : (hovered ? SimpleSkinTheme.PAPER : SimpleSkinTheme.PAPER_MUTED);
+        context.fill(card.x, card.y, card.x + CARD_WIDTH, card.y + CARD_HEIGHT, border);
         context.fill(card.x + 1, card.y + 1, card.x + CARD_WIDTH - 1, card.y + CARD_HEIGHT - 1,
                 hovered ? 0xFF2A3036 : SimpleSkinTheme.SURFACE);
         context.fill(card.x + 8, card.y + 8, card.x + CARD_WIDTH - 8, card.y + 116, 0xFF111519);
@@ -211,11 +290,30 @@ public final class SkinLibraryScreen extends Screen {
             } else {
                 SkinPreviewRenderer.drawHead(context, texture, card.x + 49, card.y + 26, 50);
             }
+        } else {
+            context.drawCenteredTextWithShadow(textRenderer, "no preview", card.x + CARD_WIDTH / 2,
+                    card.y + 56, SimpleSkinTheme.PAPER_MUTED);
         }
+
         String name = card.skin != null ? card.skin.name() : card.player.getProfile().name();
-        context.drawText(textRenderer, trim(name, 19), card.x + 8, card.y + 122, SimpleSkinTheme.PAPER, false);
-        String source = card.skin != null && card.skin.sourcePlayer() != null ? "from " + card.skin.sourcePlayer() : "online now";
-        context.drawText(textRenderer, trim(source, 22), card.x + 8, card.y + 135, SimpleSkinTheme.PAPER_MUTED, false);
+        context.drawText(textRenderer, textRenderer.trimToWidth(name, CARD_WIDTH - 16),
+                card.x + 8, card.y + 122, SimpleSkinTheme.PAPER, false);
+        String source = describeSource(card);
+        context.drawText(textRenderer, textRenderer.trimToWidth(source, CARD_WIDTH - 16),
+                card.x + 8, card.y + 135, SimpleSkinTheme.PAPER_MUTED, false);
+        if (card.skin != null && card.skin.keyCode() >= 0) {
+            String key = net.minecraft.client.util.InputUtil.Type.KEYSYM
+                    .createFromCode(card.skin.keyCode()).getLocalizedText().getString();
+            context.drawText(textRenderer, textRenderer.trimToWidth("[" + key + "]", CARD_WIDTH - 16),
+                    card.x + 8, card.y + 148, SimpleSkinTheme.COPPER, false);
+        }
+    }
+
+    private String describeSource(Card card) {
+        if (card.skin == null) {
+            return "online now";
+        }
+        return card.skin.sourcePlayer() != null ? "from " + card.skin.sourcePlayer() : "imported";
     }
 
     private Identifier texture(Card card) {
@@ -230,15 +328,14 @@ public final class SkinLibraryScreen extends Screen {
         }
     }
 
-    private static String trim(String value, int length) {
-        return value.length() <= length ? value : value.substring(0, Math.max(0, length - 1)) + "...";
-    }
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (mouseX >= panelX && mouseX <= panelX + panelWidth && mouseY >= contentTop && mouseY <= contentBottom) {
-            scroll = Math.max(0, Math.min(maxScroll, scroll - (int) Math.signum(verticalAmount) * 42));
-            clearAndInit();
+            int next = Math.max(0, Math.min(maxScrollRow, scrollRow - (int) Math.signum(verticalAmount)));
+            if (next != scrollRow) {
+                scrollRow = next;
+                clearAndInit();
+            }
             return true;
         }
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
@@ -250,13 +347,15 @@ public final class SkinLibraryScreen extends Screen {
     }
 
     private enum Tab {
-        HISTORY("Recently equipped"),
-        SAVED("Your saved wardrobe"),
-        STEAL("Players on this server");
+        HISTORY("History", "Recently equipped"),
+        SAVED("Change Skin", "Your saved wardrobe"),
+        STEAL("Steal Skin", "Players on this server");
 
+        private final String label;
         private final String subtitle;
 
-        Tab(String subtitle) {
+        Tab(String label, String subtitle) {
+            this.label = label;
             this.subtitle = subtitle;
         }
     }
@@ -266,6 +365,7 @@ public final class SkinLibraryScreen extends Screen {
         private final PlayerListEntry player;
         private int x;
         private int y;
+        private boolean visible;
 
         private Card(StoredSkin skin, PlayerListEntry player) {
             this.skin = skin;

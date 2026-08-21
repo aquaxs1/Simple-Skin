@@ -2,6 +2,7 @@ package de.simpleskin.screen;
 
 import com.mojang.authlib.GameProfile;
 import de.simpleskin.SimpleSkinClient;
+import de.simpleskin.data.SimpleSkinConfig;
 import de.simpleskin.data.SkinModel;
 import de.simpleskin.data.StoredSkin;
 import de.simpleskin.skin.SkinOverrideManager;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.network.OtherClientPlayerEntity;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.client.util.InputUtil;
@@ -23,6 +25,7 @@ import org.lwjgl.glfw.GLFW;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class SkinSettingsScreen extends Screen {
@@ -43,9 +46,12 @@ public final class SkinSettingsScreen extends Screen {
     private float pitch;
     private boolean dragging;
     private boolean listeningForKey;
+    private boolean confirmingDelete;
     private String status = "Drag the preview to rotate.";
     private TextFieldWidget nameField;
     private ThemedButton keyButton;
+    private ThemedButton saveButton;
+    private ThemedButton deleteButton;
     private OtherClientPlayerEntity previewPlayer;
 
     public SkinSettingsScreen(Screen parent, StoredSkin skin) {
@@ -58,7 +64,7 @@ public final class SkinSettingsScreen extends Screen {
     @Override
     protected void init() {
         panelWidth = Math.min(690, width - 24);
-        panelHeight = Math.min(440, height - 20);
+        panelHeight = Math.min(460, height - 20);
         panelX = (width - panelWidth) / 2;
         panelY = (height - panelHeight) / 2;
         int split = panelX + Math.min(300, panelWidth * 44 / 100);
@@ -69,7 +75,7 @@ public final class SkinSettingsScreen extends Screen {
 
         try {
             SkinOverrideManager.set(previewId, mod.textures().getOrLoad(skin), skin.model());
-            if (client.world != null) {
+            if (client.world != null && previewPlayer == null) {
                 previewPlayer = new OtherClientPlayerEntity(client.world, new GameProfile(previewId, skin.name()));
             }
         } catch (IOException exception) {
@@ -78,43 +84,63 @@ public final class SkinSettingsScreen extends Screen {
 
         int x = split + 18;
         int fieldWidth = panelX + panelWidth - 18 - x;
-        nameField = new TextFieldWidget(textRenderer, x, panelY + 72, fieldWidth, 22, Text.literal("Skin name"));
+        nameField = new TextFieldWidget(textRenderer, x, panelY + 66, fieldWidth, 20, Text.literal("Skin name"));
         nameField.setMaxLength(40);
         nameField.setText(skin.name());
-        nameField.setChangedListener(skin::setName);
         addDrawableChild(nameField);
 
         int half = (fieldWidth - 6) / 2;
-        addDrawableChild(new ThemedButton(x, panelY + 126, half, 22, Text.literal("Wide arms"), ignored -> {
+        addDrawableChild(new ThemedButton(x, panelY + 112, half, 20, Text.literal("Wide arms"), ignored -> {
             skin.setModel(SkinModel.WIDE);
             refreshPreview();
         }, skin.model() == SkinModel.WIDE));
-        addDrawableChild(new ThemedButton(x + half + 6, panelY + 126, half, 22, Text.literal("Slim arms"), ignored -> {
+        addDrawableChild(new ThemedButton(x + half + 6, panelY + 112, half, 20, Text.literal("Slim arms"), ignored -> {
             skin.setModel(SkinModel.SLIM);
             refreshPreview();
         }, skin.model() == SkinModel.SLIM));
 
-        keyButton = new ThemedButton(x, panelY + 184, fieldWidth, 24, keyLabel(), ignored -> {
+        keyButton = new ThemedButton(x, panelY + 158, fieldWidth, 20, keyLabel(), ignored -> {
             listeningForKey = true;
-            keyButton.setMessage(Text.literal("Press a key..."));
+            keyButton.setMessage(Text.literal("Press a key, Esc to cancel..."));
         }, false);
         addDrawableChild(keyButton);
 
-        addDrawableChild(new ThemedButton(x, panelY + 228, fieldWidth, 24, Text.literal("Export PNG"), ignored -> export(), false));
-        addDrawableChild(new ThemedButton(x, panelY + 262, fieldWidth, 24,
-                Text.literal(skin.saved() ? "Saved to Change Skin" : "Save to Change Skin"), ignored -> save(), false));
+        SimpleSkinConfig.Visibility visibility = mod.config().visibility();
+        addDrawableChild(new ThemedButton(x, panelY + 204, fieldWidth, 20,
+                Text.literal("Visibility: " + visibility.label()), ignored -> {
+                    mod.config().setVisibility(mod.config().visibility().next());
+                    clearAndInit();
+                }, false).tooltip(Text.literal(visibility.description())));
+
+        addDrawableChild(new ThemedButton(x, panelY + 236, half, 20, Text.literal("Export PNG"), ignored -> export(), false));
+        saveButton = new ThemedButton(x + half + 6, panelY + 236, half, 20,
+                Text.literal(skin.saved() ? "Saved" : "Save"), ignored -> save(), false);
         if (skin.saved()) {
-            children().stream()
-                    .filter(element -> element instanceof ThemedButton button && button.getY() == panelY + 262)
-                    .map(element -> (ThemedButton) element)
-                    .findFirst().ifPresent(button -> button.active = false);
+            saveButton.disabled();
         }
-        addDrawableChild(new ThemedButton(x, panelY + panelHeight - 76, fieldWidth, 26, Text.literal("Equip skin"), ignored -> equip(), true));
-        addDrawableChild(new ThemedButton(panelX + 18, panelY + panelHeight - 32, 72, 20, Text.literal("Back"), ignored -> close(), false));
+        addDrawableChild(saveButton);
+
+        deleteButton = new ThemedButton(x, panelY + 262, fieldWidth, 20,
+                Text.literal(confirmingDelete ? "Click again to delete" : "Delete skin"),
+                ignored -> delete(), ThemedButton.Style.DANGER);
+        addDrawableChild(deleteButton);
+
+        addDrawableChild(new ThemedButton(x, panelY + panelHeight - 76, fieldWidth, 24,
+                Text.literal("Equip skin"), ignored -> equip(), true));
+        addDrawableChild(new ThemedButton(panelX + 18, panelY + panelHeight - 32, 72, 20,
+                Text.literal("Back"), ignored -> close(), false));
+        if (mod.visibility().rejoinPending()) {
+            addDrawableChild(new ThemedButton(panelX + 96, panelY + panelHeight - 32, 84, 20,
+                    Text.literal("Rejoin now"), ignored -> mod.visibility().rejoinNow(message -> status = message), true)
+                    .tooltip(Text.literal("Reconnect so other players load your new skin")));
+        }
     }
 
     private void refreshPreview() {
+        persist();
         try {
+            // Re-applies to the player too, but only if this skin is the one being worn.
+            mod.refresh(skin);
             SkinOverrideManager.set(previewId, mod.textures().getOrLoad(skin), skin.model());
         } catch (IOException ignored) {
             status = "The preview PNG could not be loaded.";
@@ -135,6 +161,22 @@ public final class SkinSettingsScreen extends Screen {
         persist();
         status = "Saved to Change Skin.";
         clearAndInit();
+    }
+
+    /** Two-step delete: the first click arms it, the second removes the skin for good. */
+    private void delete() {
+        if (!confirmingDelete) {
+            confirmingDelete = true;
+            deleteButton.setMessage(Text.literal("Click again to delete"));
+            status = "Click Delete again to remove " + skin.name() + " permanently.";
+            return;
+        }
+        if (mod.equippedSkin() == skin) {
+            mod.unequip(message -> status = message);
+        }
+        mod.textures().invalidate(skin);
+        mod.repository().delete(skin);
+        client.setScreen(parent);
     }
 
     private void equip() {
@@ -165,7 +207,9 @@ public final class SkinSettingsScreen extends Screen {
         context.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, SimpleSkinTheme.PANEL_EDGE);
         context.fill(panelX + 1, panelY + 1, panelX + panelWidth - 1, panelY + panelHeight - 1, SimpleSkinTheme.PANEL);
         context.drawTextWithShadow(textRenderer, Text.literal("SKIN SETTINGS"), panelX + 18, panelY + 17, SimpleSkinTheme.PAPER);
-        context.drawText(textRenderer, Text.literal(skin.name()), panelX + 126, panelY + 17, SimpleSkinTheme.PAPER_MUTED, false);
+        String heading = nameField == null ? skin.name() : nameField.getText();
+        context.drawText(textRenderer, Text.literal(textRenderer.trimToWidth(heading, panelWidth - 150)),
+                panelX + 126, panelY + 17, SimpleSkinTheme.PAPER_MUTED, false);
         context.drawHorizontalLine(panelX + 18, panelX + panelWidth - 18, panelY + 36, SimpleSkinTheme.PANEL_EDGE);
 
         context.fill(previewLeft, previewTop, previewRight, previewBottom, 0xFF0F1317);
@@ -178,12 +222,14 @@ public final class SkinSettingsScreen extends Screen {
         context.drawCenteredTextWithShadow(textRenderer, "DRAG TO ROTATE", centerX, previewBottom - 13, SimpleSkinTheme.PAPER_MUTED);
 
         int labelX = previewRight + 30;
-        context.drawText(textRenderer, "NAME", labelX, panelY + 57, SimpleSkinTheme.PAPER_MUTED, false);
-        context.drawText(textRenderer, "MODEL", labelX, panelY + 111, SimpleSkinTheme.PAPER_MUTED, false);
-        context.drawText(textRenderer, "QUICK EQUIP", labelX, panelY + 169, SimpleSkinTheme.PAPER_MUTED, false);
-        context.drawText(textRenderer, "ACTIONS", labelX, panelY + 215, SimpleSkinTheme.PAPER_MUTED, false);
-        context.drawText(textRenderer, Text.literal(status), panelX + 100, panelY + panelHeight - 27,
-                SimpleSkinTheme.PAPER_MUTED, false);
+        context.drawText(textRenderer, "NAME", labelX, panelY + 53, SimpleSkinTheme.PAPER_MUTED, false);
+        context.drawText(textRenderer, "MODEL", labelX, panelY + 99, SimpleSkinTheme.PAPER_MUTED, false);
+        context.drawText(textRenderer, "QUICK EQUIP", labelX, panelY + 145, SimpleSkinTheme.PAPER_MUTED, false);
+        context.drawText(textRenderer, "WHO SEES IT", labelX, panelY + 191, SimpleSkinTheme.PAPER_MUTED, false);
+        context.drawText(textRenderer, "ACTIONS", labelX, panelY + 223, SimpleSkinTheme.PAPER_MUTED, false);
+
+        context.drawText(textRenderer, Text.literal(textRenderer.trimToWidth(status, panelWidth - 230)),
+                panelX + 190, panelY + panelHeight - 27, SimpleSkinTheme.PAPER_MUTED, false);
         super.render(context, mouseX, mouseY, delta);
     }
 
@@ -213,12 +259,22 @@ public final class SkinSettingsScreen extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
+        // Any click that is not the delete button disarms the delete confirmation.
+        if (confirmingDelete && !isOver(deleteButton, click.x(), click.y())) {
+            confirmingDelete = false;
+            deleteButton.setMessage(Text.literal("Delete skin"));
+        }
         if (click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT && click.x() >= previewLeft && click.x() <= previewRight
                 && click.y() >= previewTop && click.y() <= previewBottom) {
             dragging = true;
             return true;
         }
         return super.mouseClicked(click, doubled);
+    }
+
+    private static boolean isOver(ThemedButton button, double x, double y) {
+        return button != null && x >= button.getX() && x < button.getRight()
+                && y >= button.getY() && y < button.getBottom();
     }
 
     @Override
@@ -243,22 +299,34 @@ public final class SkinSettingsScreen extends Screen {
     @Override
     public boolean keyPressed(KeyInput input) {
         if (listeningForKey) {
-            int key = input.getKeycode();
-            if (key == GLFW.GLFW_KEY_ESCAPE) {
-                listeningForKey = false;
-            } else if (key == GLFW.GLFW_KEY_BACKSPACE || key == GLFW.GLFW_KEY_DELETE) {
-                skin.setKeyCode(-1);
-                listeningForKey = false;
-                persist();
-            } else if (key != GLFW.GLFW_KEY_UNKNOWN) {
-                skin.setKeyCode(key);
-                listeningForKey = false;
-                persist();
-            }
-            keyButton.setMessage(keyLabel());
+            captureHotkey(input.getKeycode());
             return true;
         }
         return super.keyPressed(input);
+    }
+
+    private void captureHotkey(int key) {
+        listeningForKey = false;
+        if (key == GLFW.GLFW_KEY_ESCAPE) {
+            status = "Hotkey unchanged.";
+        } else if (key == GLFW.GLFW_KEY_BACKSPACE || key == GLFW.GLFW_KEY_DELETE) {
+            mod.repository().assignKeyCode(skin, -1);
+            status = "Hotkey cleared.";
+        } else if (key != GLFW.GLFW_KEY_UNKNOWN) {
+            Optional<KeyBinding> conflict = SimpleSkinClient.conflictingKeyBinding(key);
+            Optional<StoredSkin> takenBy = mod.repository().findByKeyCode(key, skin);
+            mod.repository().assignKeyCode(skin, key);
+            String keyName = InputUtil.Type.KEYSYM.createFromCode(key).getLocalizedText().getString();
+            if (conflict.isPresent()) {
+                status = keyName + " is also bound to "
+                        + KeyBinding.getLocalizedName(conflict.get().getId()).get().getString() + ".";
+            } else if (takenBy.isPresent()) {
+                status = keyName + " was taken from " + takenBy.get().name() + ".";
+            } else {
+                status = "Hotkey set to " + keyName + ".";
+            }
+        }
+        keyButton.setMessage(keyLabel());
     }
 
     @Override

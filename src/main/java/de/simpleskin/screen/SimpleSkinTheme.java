@@ -13,6 +13,7 @@ public final class SimpleSkinTheme {
     public static final int COPPER_DARK = 0xFF8E4E32;
     public static final int EQUIPPED = 0xFF83C65A;
     public static final int DANGER = 0xFFE06C64;
+    public static final int DANGER_DARK = 0xFF8C3B36;
 
     private SimpleSkinTheme() {
     }
