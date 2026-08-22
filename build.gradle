@@ -1,0 +1,61 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-no-remap' version "${loom_version}"
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // Minecraft 26.2 is shipped with its real names, so nothing is remapped and mod
+    // dependencies are ordinary dependencies rather than modImplementation entries.
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = 'UTF-8'
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+tasks.register('skinRegressionTest', JavaExec) {
+    group = 'verification'
+    description = 'Runs the Simple Skin regression checks that do not need a game instance.'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'de.simpleskin.SimpleSkinRegressionTest'
+}
+
+tasks.named('test') {
+    failOnNoDiscoveredTests = false
+}
+
+check.dependsOn skinRegressionTest
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
