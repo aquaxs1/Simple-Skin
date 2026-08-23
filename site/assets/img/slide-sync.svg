@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 720" width="1240" height="720" role="img">
+<style>
+  text { font-family: ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
+  .t { fill: #E8E2D3; }
+  .m { fill: #B4AEA1; }
+  @keyframes pulse { 0%,100% { opacity:.35 } 50% { opacity:1 } }
+  @keyframes drift { 0% { transform: translateY(0) } 50% { transform: translateY(-6px) } 100% { transform: translateY(0) } }
+  @keyframes dash { to { stroke-dashoffset: -28 } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  .flow{stroke-dasharray:7 7;animation:dash 1s linear infinite}
+</style>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#0d1410"/><stop offset="1" stop-color="#070a08"/>
+  </linearGradient>
+  <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7ED957" stop-opacity=".22"/><stop offset="1" stop-color="#7ED957" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<rect width="1240" height="720" fill="url(#bg)"/>
+<rect width="1240" height="260" fill="url(#glow)"/>
+<text x="620.0" y="74" font-size="26" text-anchor="middle" font-weight="700" class="t">LIVE SYNC</text>
+<text x="620.0" y="106" font-size="15" text-anchor="middle" font-weight="400" class="m">Server runs Simple Skin → everyone sees the swap instantly</text>
+<rect x="64" y="290" width="312" height="140" fill="#D98555" rx="14" opacity=".12"/>
+<rect x="70" y="296" width="300" height="128" fill="#171B20" rx="10" stroke="#D98555" stroke-width="2"/>
+<rect x="84" y="310" width="55.0" height="100" fill="#111519" rx="6"/>
+<rect x="99.75" y="313" width="23.5" height="23.5" fill="#141420" rx="0"/>
+<rect x="99.75" y="313" width="23.5" height="8.8125" fill="#0E0E14" rx="0"/>
+<rect x="104.15625" y="324.75" width="3.525" height="3.525" fill="#F2F2F6" rx="0"/>
+<rect x="115.31875" y="324.75" width="3.525" height="3.525" fill="#F2F2F6" rx="0"/>
+<rect x="104.15625" y="324.75" width="3.525" height="3.525" fill="#B98CFF" rx="0"/>
+<rect x="115.31875" y="324.75" width="3.525" height="3.525" fill="#B98CFF" rx="0"/>
+<rect x="99.75" y="336.5" width="23.5" height="35.25" fill="#1A1024" rx="0"/>
+<rect x="88.0" y="336.5" width="11.75" height="35.25" fill="#141420" rx="0"/>
+<rect x="123.25" y="336.5" width="11.75" height="35.25" fill="#141420" rx="0"/>
+<rect x="88.0" y="336.5" width="11.75" height="11.75" fill="#1A1024" rx="0"/>
+<rect x="123.25" y="336.5" width="11.75" height="11.75" fill="#1A1024" rx="0"/>
+<rect x="99.75" y="371.75" width="11.75" height="35.25" fill="#0E0E14" rx="0"/>
+<rect x="111.5" y="371.75" width="11.75" height="35.25" fill="#0E0E14" rx="0"/>
+<rect x="99.75" y="401.125" width="23.5" height="5.875" fill="#2A1636" rx="0"/>
+<text x="157.0" y="356.0" font-size="15" text-anchor="start" font-weight="700" class="t">Your client</text>
+<text x="157.0" y="378.0" font-size="11.5" text-anchor="start" font-weight="400" class="m">equips a skin</text>
+<rect x="464" y="280" width="312" height="160" fill="#83C65A" rx="14" opacity=".12"/>
+<rect x="470" y="286" width="300" height="148" fill="#171B20" rx="10" stroke="#83C65A" stroke-width="2"/>
+<text x="620" y="318" font-size="13" text-anchor="middle" font-weight="400" class="m">Server</text>
+<text x="620" y="340" font-size="15" text-anchor="middle" font-weight="700" class="t">SIMPLE SKIN</text>
+<text x="620" y="362" font-size="11.5" text-anchor="middle" font-weight="400" class="m">relays the skin</text>
+<text x="620" y="392" font-size="11" text-anchor="middle" font-weight="400" class="m" fill="#83C65A">validates · broadcasts</text>
+<rect x="870" y="168" width="300" height="116" fill="#171B20" rx="10" stroke="#3A4148" stroke-width="2"/>
+<rect x="884" y="182" width="49.0" height="88" fill="#111519" rx="6"/>
+<rect x="898.25" y="185" width="20.5" height="20.5" fill="#C89A6B" rx="0"/>
+<rect x="898.25" y="185" width="20.5" height="7.6875" fill="#3F2A16" rx="0"/>
+<rect x="902.09375" y="195.25" width="3.0749999999999997" height="3.0749999999999997" fill="#F2F2F6" rx="0"/>
+<rect x="911.83125" y="195.25" width="3.0749999999999997" height="3.0749999999999997" fill="#F2F2F6" rx="0"/>
+<rect x="898.25" y="205.5" width="20.5" height="30.75" fill="#38B0B4" rx="0"/>
+<rect x="888.0" y="205.5" width="10.25" height="30.75" fill="#C89A6B" rx="0"/>
+<rect x="918.75" y="205.5" width="10.25" height="30.75" fill="#C89A6B" rx="0"/>
+<rect x="888.0" y="205.5" width="10.25" height="10.25" fill="#38B0B4" rx="0"/>
+<rect x="918.75" y="205.5" width="10.25" height="10.25" fill="#38B0B4" rx="0"/>
+<rect x="898.25" y="236.25" width="10.25" height="30.75" fill="#3B3F8F" rx="0"/>
+<rect x="908.5" y="236.25" width="10.25" height="30.75" fill="#3B3F8F" rx="0"/>
+<rect x="898.25" y="261.875" width="20.5" height="5.125" fill="#54545C" rx="0"/>
+<text x="951.0" y="222.0" font-size="15" text-anchor="start" font-weight="700" class="t">Player 1</text>
+<text x="951.0" y="244.0" font-size="11.5" text-anchor="start" font-weight="400" class="m">sees it right away</text>
+<rect x="870" y="296" width="300" height="116" fill="#171B20" rx="10" stroke="#3A4148" stroke-width="2"/>
+<rect x="884" y="310" width="49.0" height="88" fill="#111519" rx="6"/>
+<rect x="898.25" y="313" width="20.5" height="20.5" fill="#E8C9A8" rx="0"/>
+<rect x="898.25" y="313" width="20.5" height="7.6875" fill="#1F5E4A" rx="0"/>
+<rect x="902.09375" y="323.25" width="3.0749999999999997" height="3.0749999999999997" fill="#F2F2F6" rx="0"/>
+<rect x="911.83125" y="323.25" width="3.0749999999999997" height="3.0749999999999997" fill="#F2F2F6" rx="0"/>
+<rect x="898.25" y="333.5" width="20.5" height="30.75" fill="#57C89A" rx="0"/>
+<rect x="888.0" y="333.5" width="10.25" height="30.75" fill="#E8C9A8" rx="0"/>
+<rect x="918.75" y="333.5" width="10.25" height="30.75" fill="#E8C9A8" rx="0"/>
+<rect x="888.0" y="333.5" width="10.25" height="10.25" fill="#57C89A" rx="0"/>
+<rect x="918.75" y="333.5" width="10.25" height="10.25" fill="#57C89A" rx="0"/>
+<rect x="898.25" y="364.25" width="10.25" height="30.75" fill="#2A4A46" rx="0"/>
+<rect x="908.5" y="364.25" width="10.25" height="30.75" fill="#2A4A46" rx="0"/>
+<rect x="898.25" y="389.875" width="20.5" height="5.125" fill="#1A2E2C" rx="0"/>
+<text x="951.0" y="350.0" font-size="15" text-anchor="start" font-weight="700" class="t">Player 2</text>
+<text x="951.0" y="372.0" font-size="11.5" text-anchor="start" font-weight="400" class="m">sees it right away</text>
+<rect x="870" y="424" width="300" height="116" fill="#171B20" rx="10" stroke="#3A4148" stroke-width="2"/>
+<rect x="884" y="438" width="49.0" height="88" fill="#111519" rx="6"/>
+<rect x="898.25" y="441" width="20.5" height="20.5" fill="#D89A78" rx="0"/>
+<rect x="898.25" y="441" width="20.5" height="7.6875" fill="#5A1E14" rx="0"/>
+<rect x="902.09375" y="451.25" width="3.0749999999999997" height="3.0749999999999997" fill="#F2F2F6" rx="0"/>
+<rect x="911.83125" y="451.25" width="3.0749999999999997" height="3.0749999999999997" fill="#F2F2F6" rx="0"/>
+<rect x="898.25" y="461.5" width="20.5" height="30.75" fill="#C6482E" rx="0"/>
+<rect x="888.0" y="461.5" width="10.25" height="30.75" fill="#D89A78" rx="0"/>
+<rect x="918.75" y="461.5" width="10.25" height="30.75" fill="#D89A78" rx="0"/>
+<rect x="888.0" y="461.5" width="10.25" height="10.25" fill="#C6482E" rx="0"/>
+<rect x="918.75" y="461.5" width="10.25" height="10.25" fill="#C6482E" rx="0"/>
+<rect x="898.25" y="492.25" width="10.25" height="30.75" fill="#3A2018" rx="0"/>
+<rect x="908.5" y="492.25" width="10.25" height="30.75" fill="#3A2018" rx="0"/>
+<rect x="898.25" y="517.875" width="20.5" height="5.125" fill="#241410" rx="0"/>
+<text x="951.0" y="478.0" font-size="15" text-anchor="start" font-weight="700" class="t">Player 3</text>
+<text x="951.0" y="500.0" font-size="11.5" text-anchor="start" font-weight="400" class="m">sees it right away</text>
+<path d="M370 360 H470" stroke="#D98555" stroke-width="3" fill="none" class="flow"/>
+<polygon points="470,360 458,354 458,366" fill="#D98555"/>
+<path d="M770 360 C 820 360, 820 226, 870 226" stroke="#83C65A" stroke-width="3" fill="none" class="flow"/>
+<polygon points="870,226 858,220 858,232" fill="#83C65A"/>
+<path d="M770 360 C 820 360, 820 354, 870 354" stroke="#83C65A" stroke-width="3" fill="none" class="flow"/>
+<polygon points="870,354 858,348 858,360" fill="#83C65A"/>
+<path d="M770 360 C 820 360, 820 482, 870 482" stroke="#83C65A" stroke-width="3" fill="none" class="flow"/>
+<polygon points="870,482 858,476 858,488" fill="#83C65A"/>
+<rect x="80" y="600" width="1080" height="56" fill="#171B20" rx="8" stroke="#3A4148" stroke-width="1"/>
+<text x="104" y="634" font-size="13" text-anchor="start" font-weight="400" class="m">No rejoin · no Mojang round-trip · falls back automatically on vanilla servers</text>
+</svg>
