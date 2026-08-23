@@ -3,5 +3,7 @@ build/
 run/
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
+# The website ships a copy of the built mod jar for people to download
+!site/downloads/*.jar
 .idea/
 *.iml

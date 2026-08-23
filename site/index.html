@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Skin — change your Minecraft skin without restarting</title>
+<meta name="description" content="A Fabric mod for Minecraft 26.2. Swap, steal, import and edit skins in-game — and make the change visible to every other player, instantly.">
+<meta name="theme-color" content="#070b08">
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/logo-180.png">
+<meta property="og:title" content="Simple Skin — change your Minecraft skin without restarting">
+<meta property="og:description" content="Swap, steal, import and edit skins in-game — and make the change visible to every other player.">
+<meta property="og:image" content="assets/img/logo-512.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="bg-fx" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo-96.png" alt="" width="40" height="40">
+      Simple&nbsp;Skin
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="#showcase">Showcase</a>
+      <a href="#highlights">Highlights</a>
+      <a href="features.html">Features</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn btn-primary btn-sm" data-download href="downloads/simple-skin-2.0.0.jar" download>Download</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> Fabric · Minecraft 26.2</span>
+        <h1>Change your skin <span class="grad">mid-game.</span><br>Everyone else sees it too.</h1>
+        <p class="hero-sub">
+          Simple Skin puts a full skin wardrobe behind one key. Swap, steal, import and edit skins
+          without ever restarting Minecraft — and unlike a plain skin changer, the swap actually
+          reaches the other players on your server.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" data-download href="downloads/simple-skin-2.0.0.jar" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
+            Download v2.0.0
+          </a>
+          <a class="btn btn-lg btn-ghost" href="features.html">
+            View more
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="hero-meta">
+          <span class="chip"><b>26.2</b> Minecraft</span>
+          <span class="chip"><b>Java 25</b> required</span>
+          <span class="chip"><b>Client</b> · server optional</span>
+          <span class="chip"><b>MIT</b> licensed</span>
+        </div>
+      </div>
+      <div class="hero-logo">
+        <span class="ring" aria-hidden="true"></span>
+        <span class="ring r2" aria-hidden="true"></span>
+        <img src="assets/img/logo-512.png" alt="Simple Skin logo: a Minecraft character split between two skins, wrapped in a refresh arrow" width="380" height="380">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOWCASE / SLIDESHOW ============ -->
+  <section class="section" id="showcase">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">Showcase</div>
+        <h2>See how it looks and works</h2>
+        <p>Click the picture to move on, use the arrows, or jump straight to a screen below.</p>
+      </div>
+
+      <div class="shots reveal" data-slideshow aria-roledescription="carousel" aria-label="Simple Skin screens">
+        <div class="stage">
+          <button class="stage-nav prev" type="button" aria-label="Previous screen">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="stage-nav next" type="button" aria-label="Next screen">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
+          <div class="slide on" data-title="Your wardrobe, one key away"
+               data-text="Press K anywhere in-game. Every saved skin sits in a grid with its own hotkey; the green card is the one you are wearing.">
+            <img src="assets/img/slide-library.svg" alt="The Simple Skin library showing saved skins as cards with Equip, Save and settings buttons" loading="eager" width="1240" height="720">
+          </div>
+          <div class="slide" data-title="Steal a skin, or search any name"
+               data-text="Take the skin of anyone on the server, or type a username and pull it straight from Mojang — they do not have to be online.">
+            <img src="assets/img/slide-steal.svg" alt="The Steal Skin tab listing server players, with a search field for looking up any username" loading="lazy" width="1240" height="720">
+          </div>
+          <div class="slide" data-title="Tune every skin"
+               data-text="Rotate the 3D preview, pick wide or slim arms, bind a hotkey, choose a cape, and decide how far the change should travel.">
+            <img src="assets/img/slide-settings.svg" alt="The skin settings screen with a rotatable preview and controls for name, model, hotkey, cape and visibility" loading="lazy" width="1240" height="720">
+          </div>
+          <div class="slide" data-title="Edit without leaving the game"
+               data-text="Strip second-layer overlays, graft another skin's head onto this one, or swap a colour. Edits always save as a new skin.">
+            <img src="assets/img/slide-editor.svg" alt="The built-in skin editor with layer removal buttons, head transplant and colour replacement" loading="lazy" width="1240" height="720">
+          </div>
+          <div class="slide" data-title="Live sync — instant for everyone"
+               data-text="Put Simple Skin on the server too and your swap is relayed to every other player right away. No rejoin, no waiting on Mojang.">
+            <img src="assets/img/slide-sync.svg" alt="Diagram: your client sends the skin to a Simple Skin server, which relays it to the other players instantly" loading="lazy" width="1240" height="720">
+          </div>
+          <div class="slide" data-title="Vanilla server? Still works"
+               data-text="Upload, verify, rejoin. Simple Skin checks what Mojang really serves before reconnecting, so the server never picks up your old skin.">
+            <img src="assets/img/slide-route.svg" alt="Diagram of the three-step fallback: upload to the profile, verify the served texture, then rejoin the server" loading="lazy" width="1240" height="720">
+          </div>
+        </div>
+
+        <div class="caption">
+          <span class="num mono" data-cap-num>01 / 06</span>
+          <div>
+            <h3 data-cap-title></h3>
+            <p data-cap-text></p>
+          </div>
+        </div>
+
+        <div class="thumbs" role="tablist" aria-label="Choose a screen">
+          <button class="thumb" role="tab" aria-selected="true" type="button">Library<span class="bar"></span></button>
+          <button class="thumb" role="tab" aria-selected="false" type="button">Steal &amp; search<span class="bar"></span></button>
+          <button class="thumb" role="tab" aria-selected="false" type="button">Settings<span class="bar"></span></button>
+          <button class="thumb" role="tab" aria-selected="false" type="button">Editor<span class="bar"></span></button>
+          <button class="thumb" role="tab" aria-selected="false" type="button">Live sync<span class="bar"></span></button>
+          <button class="thumb" role="tab" aria-selected="false" type="button">Any server<span class="bar"></span></button>
+        </div>
+      </div>
+
+      <p class="muted mono center" style="margin-top:22px;font-size:.82rem">
+        Interface illustrations drawn from the mod's real layout and colours.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ HIGHLIGHTS ============ -->
+  <section class="section" id="highlights">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <div class="kicker">Why it is different</div>
+        <h2>Most skin changers only fool you</h2>
+        <p>They repaint your own screen and stop there. Simple Skin goes the whole way to the other players.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card reveal" data-delay="0">
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+          </div>
+          <h3>Seen by everyone</h3>
+          <p>On a Simple Skin server the swap is relayed live. Anywhere else it goes through your Mojang profile, verified byte for byte before a rejoin.</p>
+        </article>
+
+        <article class="card reveal" data-delay="70">
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <h3>No restart, ever</h3>
+          <p>Equip from the library or a hotkey and the skin is on you in the same tick. No relaunch, no alt-tab to a website.</p>
+        </article>
+
+        <article class="card reveal" data-delay="140">
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
+          <h3>Steal any skin</h3>
+          <p>Copy a player standing next to you, or look up any username through Mojang's own API — no third-party scraping.</p>
+        </article>
+
+        <article class="card accent reveal" data-delay="0">
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          </div>
+          <h3>Edit in-game</h3>
+          <p>Remove the hat or jacket layer, transplant a head from another skin, or replace a colour. The original is never overwritten.</p>
+        </article>
+
+        <article class="card accent reveal" data-delay="70">
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h4"/><path d="M7 13h10"/><path d="M7 17h7"/></svg>
+          </div>
+          <h3>Drop-folder import</h3>
+          <p>Put a PNG in <code>config/simple-skin/import</code> and it lands in your library on its own. No file dialog needed.</p>
+        </article>
+
+        <article class="card accent reveal" data-delay="140">
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="m15 15 6 6"/><path d="M4 4l5 5"/></svg>
+          </div>
+          <h3>Shuffle &amp; rotate</h3>
+          <p>One key for a random skin from your wardrobe, or let it rotate on a timer while you play.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT REACHES OTHERS ============ -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">The honest part</div>
+        <h2>How the skin actually reaches other players</h2>
+        <p>
+          A client-side mod cannot tell someone else's game what to draw. Every other player asks
+          <em>the server</em>, and the server asks Mojang exactly once — while you are logging in.
+          Simple Skin takes the best route available.
+        </p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card reveal">
+          <h3>Route 1 · Live sync <span class="chip" style="margin-left:6px">instant</span></h3>
+          <p style="margin-bottom:14px">
+            If the server also runs Simple Skin, your client sends the skin over a plugin channel.
+            The server validates it and relays it to every other Simple Skin client, which applies
+            it immediately. No rejoin, no Mojang round-trip.
+          </p>
+          <p class="muted mono" style="font-size:.85rem;margin:0">simple_skin:equip → server → simple_skin:wearing</p>
+        </div>
+        <div class="card reveal" data-delay="90">
+          <h3>Route 2 · Your profile <span class="chip" style="margin-left:6px">any server</span></h3>
+          <p style="margin-bottom:14px">
+            On a vanilla server the skin is uploaded to your Minecraft profile. Simple Skin then
+            downloads what Mojang is <em>really</em> serving and compares it byte for byte before
+            reconnecting — rejoining too early would hand the server your previous skin.
+          </p>
+          <p class="muted mono" style="font-size:.85rem;margin:0">upload → verify → rejoin</p>
+        </div>
+      </div>
+
+      <div class="callout green reveal" style="margin-top:20px">
+        <h3>Visibility is yours to choose</h3>
+        <p>
+          <strong>Only me</strong> keeps everything on your machine.
+          <strong>Upload to profile</strong> uploads and verifies, then waits for you to press Rejoin.
+          <strong>Upload + rejoin</strong> does the whole thing by itself. Offline or with an expired
+          session, the skin still applies locally and the status line says so rather than pretending it worked.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="band reveal">
+        <h2>Grab the jar</h2>
+        <p>One file, dropped in your mods folder. We'll list exactly what else it needs right after the download starts.</p>
+        <div class="hero-cta" style="justify-content:center;margin-top:26px">
+          <a class="btn btn-primary btn-lg" data-download href="downloads/simple-skin-2.0.0.jar" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
+            Download simple-skin-2.0.0.jar
+          </a>
+          <a class="btn btn-lg btn-ghost" href="features.html">Read the full feature list</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html" style="margin-bottom:14px">
+          <img src="assets/img/logo-96.png" alt="" width="40" height="40">
+          Simple&nbsp;Skin
+        </a>
+        <p>A client-side Fabric mod for Minecraft 26.2. Swap skins in-game and have everyone else see it.</p>
+      </div>
+
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html#showcase">Showcase</a></li>
+          <li><a href="index.html#highlights">Highlights</a></li>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="features.html">Features</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Get started</h4>
+        <ul>
+          <li><a data-download href="downloads/simple-skin-2.0.0.jar" download>Download</a></li>
+          <li><a href="features.html#install">Installation</a></li>
+          <li><a href="features.html#usage">How to use</a></li>
+          <li><a href="features.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="faq.html#trouble">Troubleshooting</a></li>
+          <li><a href="terms.html">Terms of Use</a></li>
+          <li><a href="terms.html#privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bar">
+      <span>© <span data-year>2026</span> Simple Skin contributors · MIT licensed</span>
+      <span>Not affiliated with Mojang Studios or Microsoft.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ DOWNLOAD MODAL ============ -->
+<div class="modal" id="dl-modal" role="dialog" aria-modal="true" aria-labelledby="dl-title" aria-hidden="true">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" type="button" data-close aria-label="Close">✕</button>
+    <h2 id="dl-title" style="font-size:1.6rem">Your download has started</h2>
+    <div class="dl-note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;color:var(--green)" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
+      <span><strong>simple-skin-2.0.0.jar</strong> — drop it into <code>.minecraft/mods</code></span>
+    </div>
+
+    <h3 style="font-size:1.05rem">It needs these to load</h3>
+    <div class="dep">
+      <span class="tag req">required</span>
+      <div>
+        <strong>Minecraft 26.2</strong>
+        <p>Built against 26.2 exactly. Earlier versions use a different, incompatible client API.</p>
+      </div>
+    </div>
+    <div class="dep">
+      <span class="tag req">required</span>
+      <div>
+        <strong>Java 25</strong>
+        <p>Minecraft 26.2 needs it, and so does this mod. Older Java will refuse to start the game.</p>
+      </div>
+    </div>
+    <div class="dep">
+      <span class="tag req">required</span>
+      <div>
+        <strong>Fabric Loader 0.19.3 or newer</strong>
+        <p>Install it with the <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric installer</a>, then pick the Fabric profile in the launcher.</p>
+      </div>
+    </div>
+    <div class="dep">
+      <span class="tag req">required</span>
+      <div>
+        <strong>Fabric API — 0.158.0+26.2</strong>
+        <p>Simple Skin uses its key-mapping, lifecycle and networking modules. Get it from <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Modrinth</a> or <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api" target="_blank" rel="noopener">CurseForge</a> and put it in the same mods folder.</p>
+      </div>
+    </div>
+    <div class="dep">
+      <span class="tag opt">optional</span>
+      <div>
+        <strong>Simple Skin on the server</strong>
+        <p>The same jar. Add it server-side to unlock live sync so skin swaps reach other players instantly, with no rejoin. Everything works without it.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+      <a class="btn btn-primary" href="features.html#install">Installation guide</a>
+      <button class="btn btn-ghost" type="button" data-close>Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

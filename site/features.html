@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features &amp; usage — Simple Skin</title>
+<meta name="description" content="Everything Simple Skin can do, what you need to run it, and how to use every screen, hotkey and folder.">
+<meta name="theme-color" content="#070b08">
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="bg-fx" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="40" height="40">Simple&nbsp;Skin</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html#showcase">Showcase</a>
+      <a href="features.html" aria-current="page">Features</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn btn-primary btn-sm" data-download href="downloads/simple-skin-2.0.0.jar" download>Download</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="crumb"><a href="index.html">Home</a> / Features &amp; usage</div>
+      <h1>Everything Simple Skin does</h1>
+      <p>The full list of what the mod can do, what it needs to run, and how to drive every screen.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" data-download href="downloads/simple-skin-2.0.0.jar" download>Download v2.0.0</a>
+        <a class="btn btn-ghost" href="#usage">Jump to how-to</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURE LIST ============ -->
+  <section class="section" id="capabilities">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">Capabilities</div>
+        <h2>What the mod can do</h2>
+      </div>
+
+      <div class="grid grid-2">
+        <article class="card reveal">
+          <h3>Skin library</h3>
+          <p>Three tabs — <strong>History</strong> (the last 40 skins you wore), <strong>Change Skin</strong>
+          (your saved wardrobe) and <strong>Steal Skin</strong> (everyone on the server). Cards show a live
+          preview, where the skin came from and its hotkey. The skin you are wearing is outlined in green.</p>
+        </article>
+
+        <article class="card reveal" data-delay="70">
+          <h3>Equip without restarting</h3>
+          <p>Equip from a card, from the settings screen, or from a per-skin hotkey. The texture is registered
+          and applied on the spot. Nothing is written to your game files and nothing needs a relaunch.</p>
+        </article>
+
+        <article class="card reveal">
+          <h3>Live sync to other players</h3>
+          <p>When the server also runs Simple Skin, your swap is relayed to every other Simple Skin client
+          straight away over the <code>simple_skin:equip</code> channel. Players who join later are caught up
+          automatically. On a vanilla server the channel is never negotiated and nothing is sent.</p>
+        </article>
+
+        <article class="card reveal" data-delay="70">
+          <h3>Profile upload with verification</h3>
+          <p>The fallback route uploads the PNG to your Minecraft profile, then polls Mojang and downloads the
+          texture it actually serves, comparing it byte for byte. Only once it matches does a rejoin happen —
+          the CDN lags behind, and reconnecting early would publish your <em>old</em> skin.</p>
+        </article>
+
+        <article class="card reveal">
+          <h3>Steal from the server</h3>
+          <p>Every player on the tab list can be copied with one click, either equipped straight away or saved
+          to your wardrobe. Downloads are pinned to Mojang's texture host, so a hostile server cannot point
+          the mod anywhere else.</p>
+        </article>
+
+        <article class="card reveal" data-delay="70">
+          <h3>Search any username</h3>
+          <p>Type a name in the Steal tab and Simple Skin resolves it through Mojang's public API — the player
+          does not need to be online, or on your server at all. NameMC is deliberately not used: it has no
+          public API and its terms forbid scraping.</p>
+        </article>
+
+        <article class="card accent reveal">
+          <h3>Import from your computer</h3>
+          <p>Pick a PNG through your system's file chooser, or simply drop files into
+          <code>config/simple-skin/import</code> — they are picked up automatically. Both 64×64 and legacy
+          64×32 skins are accepted and converted exactly the way the game converts them.</p>
+        </article>
+
+        <article class="card accent reveal" data-delay="70">
+          <h3>Built-in editor</h3>
+          <p>Remove any second-layer overlay (hat, jacket, either sleeve, either trouser leg), graft the head
+          of another saved skin onto this one, or replace one colour with another across the whole image.
+          Every edit is saved as a <em>new</em> skin, so the original survives.</p>
+        </article>
+
+        <article class="card accent reveal">
+          <h3>Outfits with capes</h3>
+          <p>Pair a skin with a cape choice: keep the one you have, hide it, or wear a specific cape.
+          Mojang only allows activating capes your account already owns — no mod can upload one — so the
+          picker lists exactly what is on your profile.</p>
+        </article>
+
+        <article class="card accent reveal" data-delay="70">
+          <h3>Hotkeys, shuffle and rotation</h3>
+          <p>Bind any key to any saved skin, with a warning when it clashes with a vanilla control. A separate
+          shuffle key equips a random skin, and an optional timer rotates through your wardrobe while you play.</p>
+        </article>
+
+        <article class="card reveal">
+          <h3>3D preview</h3>
+          <p>The settings screen renders the skin on a real player model you can drag to rotate and tilt,
+          so you can check the back and the arms before committing.</p>
+        </article>
+
+        <article class="card reveal" data-delay="70">
+          <h3>Export and delete</h3>
+          <p>Write any stored skin back out as a PNG to <code>.minecraft/simple-skin/exports</code>, or remove
+          it for good with a two-step confirmation. Deleting the skin you are wearing also drops the override.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REQUIREMENTS ============ -->
+  <section class="section" id="requirements">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">Requirements</div>
+        <h2>What you need</h2>
+        <p>All four are required. The fifth is optional and only unlocks live sync.</p>
+      </div>
+
+      <div class="table-wrap reveal">
+        <table>
+          <thead>
+            <tr><th>Dependency</th><th>Version</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Minecraft</strong></td><td><code>26.2</code></td><td>Built against 26.2's client API, which differs from 1.21.x.</td></tr>
+            <tr><td><strong>Java</strong></td><td><code>25+</code></td><td>Required by Minecraft 26.2 itself.</td></tr>
+            <tr><td><strong>Fabric Loader</strong></td><td><code>0.19.3+</code></td><td>Loads the mod and applies its mixins.</td></tr>
+            <tr><td><strong>Fabric API</strong></td><td><code>0.158.0+26.2</code></td><td>Key mappings, client lifecycle and networking.</td></tr>
+            <tr><td><strong>Simple Skin (server)</strong></td><td><em>optional</em></td><td>The same jar, server-side. Unlocks live sync.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INSTALL ============ -->
+  <section class="section" id="install">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">Installation</div>
+        <h2>Getting it running</h2>
+      </div>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div>
+            <h3>Install Fabric for Minecraft 26.2</h3>
+            <p>Run the <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric installer</a>,
+            choose 26.2, and install. A new profile appears in the launcher — start the game once with it so
+            the folders are created.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div>
+            <h3>Drop in Fabric API</h3>
+            <p>Download <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Fabric API</a>
+            for 26.2 and put the jar in <code>.minecraft/mods</code>.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div>
+            <h3>Add Simple Skin</h3>
+            <p>Put <code>simple-skin-2.0.0.jar</code> in the same <code>mods</code> folder.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div>
+            <h3>Launch and press <kbd>K</kbd></h3>
+            <p>Join a world or a server, press <kbd>K</kbd>, and the library opens. Rebind the key under
+            Options → Controls → Simple Skin if you like.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div>
+            <h3>Optional: the server too</h3>
+            <p>Copy the same jar into the server's <code>mods</code> folder (it needs Fabric Loader and Fabric
+            API as well). Every player who also has the mod then sees skin swaps instantly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ USAGE ============ -->
+  <section class="section" id="usage">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">How to use it</div>
+        <h2>Driving the mod</h2>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card reveal">
+          <h3>Wear a skin</h3>
+          <p>Press <kbd>K</kbd> → <strong>Change Skin</strong> → <strong>Equip</strong>. It applies instantly
+          on your screen, then travels to the other players by whichever route is available. The status line at
+          the bottom of the panel always says what is happening.</p>
+        </div>
+        <div class="card reveal" data-delay="70">
+          <h3>Take someone's skin</h3>
+          <p>Open <strong>Steal Skin</strong>. Click <strong>Equip</strong> to wear it now, or <strong>Save</strong>
+          to keep it. To grab someone who is not on the server, type their name in the search box and press
+          <strong>Search</strong>.</p>
+        </div>
+        <div class="card reveal">
+          <h3>Bind a hotkey</h3>
+          <p>Open a skin's <strong>⚙</strong> settings → <strong>Quick equip</strong> → click, then press the key.
+          <kbd>Backspace</kbd> clears it, <kbd>Esc</kbd> cancels. If the key is already used by a vanilla control
+          or another skin, Simple Skin tells you.</p>
+        </div>
+        <div class="card reveal" data-delay="70">
+          <h3>Choose who sees it</h3>
+          <p>The <strong>Visibility</strong> button cycles through <em>Only me</em>, <em>Upload to profile</em>
+          and <em>Upload + rejoin</em>. The badge in the top-right of the library always shows the current setting.</p>
+        </div>
+        <div class="card reveal">
+          <h3>Import a PNG</h3>
+          <p>Either click <strong>Import PNG</strong> in the library, or drop files into
+          <code>.minecraft/config/simple-skin/import</code>. Dropped files are picked up within a few seconds —
+          a file is only read once its size stops changing, so a half-copied file is never imported.</p>
+        </div>
+        <div class="card reveal" data-delay="70">
+          <h3>Edit a skin</h3>
+          <p>Settings → <strong>Edit skin</strong>. Remove layers, swap a head, or type two hex colours and press
+          <strong>Replace colour</strong>. Press <strong>Save as new</strong> to keep the result; <strong>Reset</strong>
+          throws the edits away.</p>
+        </div>
+        <div class="card reveal">
+          <h3>Shuffle and rotate</h3>
+          <p><strong>Shuffle</strong> in the library equips a random saved skin. Bind the shuffle hotkey under
+          Options → Controls, or set a rotation interval so it changes on its own while you play.</p>
+        </div>
+        <div class="card reveal" data-delay="70">
+          <h3>Pick a cape</h3>
+          <p>Settings → <strong>Cape</strong>. Cycle to <em>Pick cape</em> and Simple Skin loads the capes your
+          account owns. Choosing one changes it on your profile, so other players see it just like a new skin.</p>
+        </div>
+      </div>
+
+      <div class="callout reveal" style="margin-top:24px">
+        <h3>Where your files live</h3>
+        <p style="margin-bottom:10px">Everything stays inside your Minecraft folder.</p>
+        <ul class="muted" style="margin:0;padding-left:20px">
+          <li><code>config/simple-skin/skins.json</code> — library metadata and settings</li>
+          <li><code>config/simple-skin/skins/</code> — stored skin PNGs</li>
+          <li><code>config/simple-skin/import/</code> — drop PNGs here to import them</li>
+          <li><code>simple-skin/exports/</code> — where <strong>Export PNG</strong> writes</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="band reveal">
+        <h2>Ready to try it?</h2>
+        <p>One jar, a couple of dependencies, and a key to press.</p>
+        <div class="hero-cta" style="justify-content:center;margin-top:24px">
+          <a class="btn btn-primary btn-lg" data-download href="downloads/simple-skin-2.0.0.jar" download>Download v2.0.0</a>
+          <a class="btn btn-lg btn-ghost" href="faq.html">Read the FAQ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html" style="margin-bottom:14px"><img src="assets/img/logo-96.png" alt="" width="40" height="40">Simple&nbsp;Skin</a>
+        <p>A client-side Fabric mod for Minecraft 26.2. Swap skins in-game and have everyone else see it.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html#showcase">Showcase</a></li>
+          <li><a href="index.html#highlights">Highlights</a></li>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="features.html">Features</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Get started</h4>
+        <ul>
+          <li><a data-download href="downloads/simple-skin-2.0.0.jar" download>Download</a></li>
+          <li><a href="features.html#install">Installation</a></li>
+          <li><a href="features.html#usage">How to use</a></li>
+          <li><a href="features.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="faq.html#trouble">Troubleshooting</a></li>
+          <li><a href="terms.html">Terms of Use</a></li>
+          <li><a href="terms.html#privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bar">
+      <span>© <span data-year>2026</span> Simple Skin contributors · MIT licensed</span>
+      <span>Not affiliated with Mojang Studios or Microsoft.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="dl-modal" role="dialog" aria-modal="true" aria-labelledby="dl-title" aria-hidden="true">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" type="button" data-close aria-label="Close">✕</button>
+    <h2 id="dl-title" style="font-size:1.6rem">Your download has started</h2>
+    <div class="dl-note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;color:var(--green)" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
+      <span><strong>simple-skin-2.0.0.jar</strong> — drop it into <code>.minecraft/mods</code></span>
+    </div>
+    <h3 style="font-size:1.05rem">It needs these to load</h3>
+    <div class="dep"><span class="tag req">required</span><div><strong>Minecraft 26.2</strong><p>Built against 26.2 exactly.</p></div></div>
+    <div class="dep"><span class="tag req">required</span><div><strong>Java 25</strong><p>Required by Minecraft 26.2 itself.</p></div></div>
+    <div class="dep"><span class="tag req">required</span><div><strong>Fabric Loader 0.19.3+</strong><p>From the <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric installer</a>.</p></div></div>
+    <div class="dep"><span class="tag req">required</span><div><strong>Fabric API 0.158.0+26.2</strong><p>From <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Modrinth</a> or <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api" target="_blank" rel="noopener">CurseForge</a>.</p></div></div>
+    <div class="dep"><span class="tag opt">optional</span><div><strong>Simple Skin on the server</strong><p>The same jar, server-side — unlocks live sync.</p></div></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+      <a class="btn btn-primary" href="features.html#install">Installation guide</a>
+      <button class="btn btn-ghost" type="button" data-close>Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
