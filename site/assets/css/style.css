@@ -3,6 +3,7 @@
    screens read as one product. */
 
 :root {
+  color-scheme: dark;
   --bg: #070b08;
   --bg-2: #0c130e;
   --panel: #131a15;
@@ -243,8 +244,8 @@ p { margin: 0 0 1em; }
 
 /* ---------- cards / features ---------- */
 .grid { display: grid; gap: 20px; }
-.grid-3 { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
-.grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); }
 
 .card {
   border: 1px solid var(--edge); border-radius: var(--radius); background: var(--panel);
