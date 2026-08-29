@@ -315,41 +315,6 @@ td code, p code, li code {
 .acc .acc-body { padding: 0 24px 22px; color: var(--muted); }
 .acc .acc-body > :last-child { margin-bottom: 0; }
 
-/* ---------- modal ---------- */
-.modal {
-  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
-  padding: 24px; background: rgba(4, 7, 5, .8); backdrop-filter: blur(8px);
-  opacity: 0; visibility: hidden; transition: opacity .28s var(--ease), visibility .28s;
-}
-.modal.open { opacity: 1; visibility: visible; }
-.modal-box {
-  width: min(100%, 660px); max-height: 88vh; overflow-y: auto;
-  background: var(--panel); border: 1px solid var(--edge-hi); border-radius: var(--radius);
-  padding: 34px; transform: translateY(20px) scale(.97); transition: transform .32s var(--ease);
-  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, .9);
-}
-.modal.open .modal-box { transform: none; }
-.modal-close {
-  position: absolute; top: 22px; right: 22px; width: 40px; height: 40px; border-radius: 10px;
-  border: 1px solid var(--edge); background: var(--panel); color: var(--paper); cursor: pointer; font-size: 1.1rem;
-}
-.modal-close:hover { border-color: var(--edge-hi); }
-.dl-note {
-  display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: var(--radius-sm);
-  background: rgba(126, 217, 87, .09); border: 1px solid rgba(126, 217, 87, .28);
-  color: var(--paper); font-size: .93rem; margin-bottom: 22px;
-}
-.dep { display: flex; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--edge); align-items: flex-start; }
-.dep:last-of-type { border-bottom: 0; }
-.dep .tag {
-  font-family: var(--mono); font-size: .72rem; padding: 3px 9px; border-radius: 999px; flex: none; margin-top: 3px;
-  border: 1px solid var(--edge-hi); color: var(--muted);
-}
-.dep .tag.req { color: var(--green); border-color: rgba(126, 217, 87, .4); background: rgba(126, 217, 87, .08); }
-.dep .tag.opt { color: var(--copper); border-color: rgba(217, 133, 85, .4); background: rgba(217, 133, 85, .08); }
-.dep strong { display: block; font-size: 1rem; }
-.dep p { margin: 2px 0 0; color: var(--muted); font-size: .9rem; }
-
 /* ---------- callout ---------- */
 .callout {
   border: 1px solid var(--edge); border-left: 3px solid var(--copper);
@@ -423,7 +388,6 @@ td code, p code, li code {
   .stage-nav { width: 38px; height: 38px; }
   .stage-nav.prev { left: 8px; } .stage-nav.next { right: 8px; }
   .caption { flex-direction: column; gap: 8px; min-height: 0; }
-  .modal-box { padding: 26px 22px; }
   .step { grid-template-columns: 1fr; }
   .step::before { margin-bottom: -6px; }
 }

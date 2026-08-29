@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Download — Simple Skin</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Download — Simple Skin">
+<meta property="og:description" content="Download the latest Simple Skin release for Minecraft 26.2 and Fabric, and see what it needs to load.">
+<meta name="description" content="Download the latest Simple Skin release for Minecraft 26.2 and Fabric, and see what it needs to load.">
+<meta name="theme-color" content="#070b08">
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/logo-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<meta property="og:image" content="https://simple-skin.vercel.app/assets/img/og-image.png">
+<meta property="og:url" content="https://simple-skin.vercel.app/download.html">
+<link rel="canonical" href="https://simple-skin.vercel.app/download">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+</head>
+<body>
+<div class="bg-fx" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="40" height="40">Simple&nbsp;Skin</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html#showcase">Showcase</a>
+      <a href="features.html">Features</a>
+      <a href="setup.html">Setup</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn btn-primary btn-sm" href="download.html" aria-current="page">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="crumb"><a href="index.html">Home</a> / Download</div>
+      <h1>Download Simple Skin</h1>
+      <p>The button resolves to the newest release on GitHub, so this page stays right without an edit for every version.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="https://github.com/aquaxs1/Simple-Skin/releases/latest">Get the latest release</a>
+        <a class="btn btn-ghost" href="https://github.com/aquaxs1/Simple-Skin/releases">All releases</a>
+      </div>
+      <p class="muted" style="margin-top:16px">One jar. Drop it into <code>.minecraft/mods</code>.</p>
+    </div>
+  </section>
+
+  <section class="section" id="needs">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Before it loads</p>
+        <h2>What it needs</h2>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <span class="chip">required</span>
+          <h3>Minecraft 26.2</h3>
+          <p>Built against 26.2 exactly. Earlier versions use a different, incompatible client API.</p>
+        </div>
+        <div class="card">
+          <span class="chip">required</span>
+          <h3>Java 25</h3>
+          <p>Minecraft 26.2 needs it, and so does this mod. Older Java refuses to start the game.</p>
+        </div>
+        <div class="card">
+          <span class="chip">required</span>
+          <h3>Fabric Loader 0.19.3+</h3>
+          <p>Install it with the <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric installer</a>, then pick the Fabric profile in the launcher.</p>
+        </div>
+        <div class="card">
+          <span class="chip">required</span>
+          <h3>Fabric API 0.158.0+26.2</h3>
+          <p>From <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Modrinth</a> or <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api" target="_blank" rel="noopener">CurseForge</a>, into the same mods folder.</p>
+        </div>
+        <div class="card">
+          <span class="chip">optional</span>
+          <h3>The same jar on the server</h3>
+          <p>Server-side it unlocks live sync, so skin swaps reach other players without a rejoin. Everything else works without it.</p>
+        </div>
+        <div class="card">
+          <span class="chip">check</span>
+          <h3>Verify the file</h3>
+          <p>Each release lists the SHA-256 of its jar. On Windows: <code>certutil -hashfile &lt;file&gt; SHA256</code>.</p>
+        </div>
+      </div>
+      <div class="hero-cta" style="margin-top:32px">
+        <a class="btn btn-primary" href="setup.html">Full setup guide</a>
+        <a class="btn btn-ghost" href="faq.html">FAQ</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html" style="margin-bottom:14px"><img src="assets/img/logo-96.png" alt="" width="40" height="40">Simple&nbsp;Skin</a>
+        <p>A client-side Fabric mod for Minecraft 26.2. Swap skins in-game and have everyone else see it.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html#showcase">Showcase</a></li>
+          <li><a href="index.html#highlights">Highlights</a></li>
+          <li><a href="setup.html">Setup</a></li>
+          <li><a href="features.html">Features</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Get started</h4>
+        <ul>
+          <li><ahref="download.html">Download</a></li>
+          <li><a href="setup.html#install">Installation</a></li>
+          <li><a href="setup.html#usage">How to use</a></li>
+          <li><a href="setup.html#requirements">Requirements</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="setup.html">Setup</a>
+      <a href="faq.html">FAQ</a></li>
+          <li><a href="faq.html#trouble">Troubleshooting</a></li>
+          <li><a href="terms.html">Terms of Use</a></li>
+          <li><a href="terms.html#privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bar">
+      <span>© <span data-year>2026</span> Simple Skin contributors · MIT licensed</span>
+      <span>Not affiliated with Mojang Studios or Microsoft.</span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

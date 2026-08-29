@@ -32,8 +32,9 @@
     <nav class="nav-links" id="nav-links">
       <a href="index.html#showcase">Showcase</a>
       <a href="features.html">Features</a>
+      <a href="setup.html">Setup</a>
       <a href="faq.html" aria-current="page">FAQ</a>
-      <a class="btn btn-primary btn-sm" data-download href="downloads/simple-skin-2.0.0.jar" download>Download</a>
+      <a class="btn btn-primary btn-sm" href="download.html">Download</a>
     </nav>
   </div>
 </header>
@@ -54,48 +55,35 @@
       <details class="acc reveal" open>
         <summary>Do other players actually see my new skin?</summary>
         <div class="acc-body">
-          <p>Yes — and this is the part most skin changers skip.</p>
-          <p>If the server also runs Simple Skin, the swap is relayed to every other player with the mod
-          <strong>immediately</strong>, with no rejoin.</p>
-          <p>On a normal server the mod uploads the skin to your Minecraft profile, waits until Mojang really
-          serves it, and then rejoins so the server re-reads your profile and tells everyone. Players without
-          the mod see it too, because at that point it is simply your real skin.</p>
+          <p>Yes. If the server runs Simple Skin too, the swap reaches everyone with the mod immediately. Otherwise the mod uploads the skin to your Minecraft profile and rejoins, so the server re-reads it and even players without the mod see it — at that point it is simply your real skin.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Why does it need to rejoin the server?</summary>
         <div class="acc-body">
-          <p>Because a client-side mod cannot tell someone else's game what to draw. Every other player asks
-          <em>the server</em> what your skin is, and the server asks Mojang exactly once — while you are
-          logging in. Reconnecting is the only client-side way to make that happen again.</p>
-          <p>You can turn the automatic rejoin off and press <strong>Rejoin now</strong> yourself, or set
-          visibility to <em>Only me</em> and skip it entirely.</p>
+          <p>Other players ask the <em>server</em> what your skin is, and the server asks Mojang once, while you log in. Reconnecting is the only client-side way to trigger that again. You can turn the automatic rejoin off, or set visibility to <em>Only me</em> and skip it.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Does it work in single player?</summary>
         <div class="acc-body">
-          <p>Yes. The skin applies locally exactly the same way. There is nobody else to show it to, so the
-          rejoin step is skipped automatically.</p>
+          <p>Yes, and the rejoin step is skipped — there is nobody to show it to.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Do I need the mod on the server?</summary>
         <div class="acc-body">
-          <p>No. Everything works on a plain vanilla server. Adding it server-side only unlocks live sync,
-          which makes swaps instant instead of needing a rejoin.</p>
+          <p>No. A plain vanilla server is fine. Server-side it only adds live sync, which makes swaps instant.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Can I use it in offline mode?</summary>
         <div class="acc-body">
-          <p>Partly. Without an online session there is no profile to upload to, so the skin applies on your
-          own screen only. The mod says so in the status line rather than pretending it worked.</p>
-          <p>Live sync does still work offline, as long as the server runs Simple Skin.</p>
+          <p>Partly. Without an online session there is no profile to upload to, so the skin applies on your screen only — the status line says so. Live sync still works if the server runs the mod.</p>
         </div>
       </details>
     </div>
@@ -108,35 +96,28 @@
       <details class="acc reveal">
         <summary>Can I upload a custom cape?</summary>
         <div class="acc-body">
-          <p>No, and neither can any other mod. Mojang only lets an account activate a cape it already owns.
-          Simple Skin lists the capes on your profile and lets you keep, hide, or switch between them.</p>
-          <p>Anything claiming to give you a custom cape either only shows it on your own screen, or is
-          showing it to other users of that same mod.</p>
+          <p>No. Capes come from your Mojang account, so the mod can only pick between the ones you already own. Custom capes are visible to other players with the mod through live sync.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>What image sizes are accepted?</summary>
         <div class="acc-body">
-          <p>64×64 PNGs, and legacy 64×32 skins which are converted using Minecraft's own conversion. Anything
-          else is rejected with a message. Files over 512&nbsp;KB are refused before they are read.</p>
+          <p>64×64 for skins, and both the classic and slim models. 64×32 legacy skins are converted on import.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Is stealing someone's skin allowed?</summary>
         <div class="acc-body">
-          <p>The mod only downloads skins that Mojang already serves publicly — the same picture any player
-          can see by looking at that person in-game. Whether wearing it is welcome is a social question, and
-          some servers have rules about impersonating other players. Use it kindly.</p>
+          <p>Skins are public through the Mojang API, so fetching one is not an exploit. Whether wearing it is welcome is a matter for the server rules.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Does the editor overwrite my original skin?</summary>
         <div class="acc-body">
-          <p>Never. Every edit is saved as a new entry in your library. <strong>Reset</strong> throws the
-          working copy away and goes back to the original.</p>
+          <p>No. Edits are saved as a new entry in your library; the original stays untouched.</p>
         </div>
       </details>
     </div>
@@ -149,29 +130,21 @@
       <details class="acc reveal">
         <summary>Can I get banned for this?</summary>
         <div class="acc-body">
-          <p>The mod uses Mojang's own public endpoints and does exactly what the official skin page does —
-          nothing is spoofed or faked. It gives no gameplay advantage.</p>
-          <p>That said, individual servers set their own rules. Changing skin repeatedly, or dressing up as
-          another player, may break a server's rules even though the mod itself is doing nothing improper.
-          Check before you go wild on someone else's server.</p>
+          <p>Changing your own skin is a normal account action, but automation and impersonation are judged by each server. Check the rules of the servers you play on — that call is theirs, not ours.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Where does my session token go?</summary>
         <div class="acc-body">
-          <p>Only to <code>api.minecraftservices.com</code>, Mojang's own endpoint, and only to upload a skin
-          or change your active cape. It is never written to disk by the mod and never sent anywhere else.
-          There is no analytics, no telemetry and no third-party server involved.</p>
+          <p>Nowhere. It stays in your game and is used only against Mojang's own API. The mod contacts no server of ours; there is none.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Is it safe to run on a public server?</summary>
         <div class="acc-body">
-          <p>Skins that arrive over live sync are validated on both the server and the receiving client before
-          being decoded — the payload is capped and rejected unless it is a real skin. Skin URLs are pinned to
-          Mojang's texture host, so a hostile server cannot make the mod fetch from anywhere else.</p>
+          <p>The mod sends no packets of its own unless the server also runs it. With live sync it exchanges only the skin data needed to draw you.</p>
         </div>
       </details>
     </div>
@@ -184,51 +157,42 @@
       <details class="acc reveal">
         <summary>The game will not start after adding the mod</summary>
         <div class="acc-body">
-          <p>Almost always a version mismatch. Check that you are on <strong>Minecraft 26.2</strong> with
-          <strong>Java 25</strong>, <strong>Fabric Loader 0.19.3+</strong>, and that <strong>Fabric API</strong>
-          for 26.2 is in the same mods folder. The crash log names whichever one is missing.</p>
+          <p>Almost always a version mismatch: it needs Minecraft 26.2, Java 25, Fabric Loader 0.19.3+ and Fabric API. The crash log names the one that is missing.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Pressing K does nothing</summary>
         <div class="acc-body">
-          <p>Another mod may have taken the key. Open Options → Controls → <strong>Simple Skin</strong> and
-          rebind it. The library also only opens once you are in a world or on a server.</p>
+          <p>Another mod has taken the key. Rebind it under <em>Options → Controls → Simple Skin</em>.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>"Mojang is rate limiting skin changes"</summary>
         <div class="acc-body">
-          <p>Mojang limits how often a profile skin can change. Wait a minute and try again. Repeated uploads of
-          the <em>same</em> skin are skipped automatically, so holding a hotkey will not trip the limit.</p>
+          <p>Mojang caps how often a profile skin may change. Wait a few minutes; the mod retries on its own.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>"Uploaded, but Mojang is still serving the old skin"</summary>
         <div class="acc-body">
-          <p>The upload worked but Mojang's CDN had not caught up within the check window. The skin will appear
-          for others shortly; press <strong>Rejoin now</strong> a little later, or reconnect normally.</p>
+          <p>Their CDN is caching. The mod waits for the new skin before rejoining, so this resolves itself.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>A file in the import folder is ignored</summary>
         <div class="acc-body">
-          <p>Files that are not valid skins are renamed with a <code>.rejected</code> suffix so they are not
-          retried forever. Check the size is 64×64 (or 64×32) and that it is really a PNG. The game log has the
-          exact reason.</p>
+          <p>It is not a valid 64×64 or 64×32 PNG. Convert it and drop it in again — the folder is re-read on open.</p>
         </div>
       </details>
 
       <details class="acc reveal">
         <summary>Live sync is not working</summary>
         <div class="acc-body">
-          <p>Both the server and the other player need Simple Skin installed. If the server does not have it,
-          the channel is never negotiated and the mod silently falls back to the profile route — which is
-          working as designed, just slower.</p>
+          <p>It needs the mod on the server <em>and</em> on the other player's client. Without both, the profile-upload route is used instead.</p>
         </div>
       </details>
     </div>
@@ -240,8 +204,8 @@
         <h2>Still stuck?</h2>
         <p>The feature page walks through every screen, hotkey and folder in detail.</p>
         <div class="hero-cta" style="justify-content:center;margin-top:24px">
-          <a class="btn btn-primary btn-lg" href="features.html#usage">Read the usage guide</a>
-          <a class="btn btn-lg btn-ghost" data-download href="downloads/simple-skin-2.0.0.jar" download>Download v2.0.0</a>
+          <a class="btn btn-primary btn-lg" href="setup.html#usage">Read the usage guide</a>
+          <a class="btn btn-lg btn-ghost" href="download.html">Download</a>
         </div>
       </div>
     </div>
@@ -260,17 +224,17 @@
         <ul>
           <li><a href="index.html#showcase">Showcase</a></li>
           <li><a href="index.html#highlights">Highlights</a></li>
-          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="setup.html">Setup</a></li>
           <li><a href="features.html">Features</a></li>
         </ul>
       </div>
       <div class="foot-col">
         <h4>Get started</h4>
         <ul>
-          <li><a data-download href="downloads/simple-skin-2.0.0.jar" download>Download</a></li>
-          <li><a href="features.html#install">Installation</a></li>
-          <li><a href="features.html#usage">How to use</a></li>
-          <li><a href="features.html#requirements">Requirements</a></li>
+          <li><ahref="download.html">Download</a></li>
+          <li><a href="setup.html#install">Installation</a></li>
+          <li><a href="setup.html#usage">How to use</a></li>
+          <li><a href="setup.html#requirements">Requirements</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -289,28 +253,6 @@
     </div>
   </div>
 </footer>
-
-<div class="modal" id="dl-modal" role="dialog" aria-modal="true" aria-labelledby="dl-title" aria-hidden="true">
-  <div class="modal-box" style="position:relative">
-    <button class="modal-close" type="button" data-close aria-label="Close">✕</button>
-    <h2 id="dl-title" style="font-size:1.6rem">Your download has started</h2>
-    <div class="dl-note">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;color:var(--green)" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
-      <span><strong>simple-skin-2.0.0.jar</strong> — drop it into <code>.minecraft/mods</code></span>
-    </div>
-    <h3 style="font-size:1.05rem">It needs these to load</h3>
-    <div class="dep"><span class="tag req">required</span><div><strong>Minecraft 26.2</strong><p>Built against 26.2 exactly.</p></div></div>
-    <div class="dep"><span class="tag req">required</span><div><strong>Java 25</strong><p>Required by Minecraft 26.2 itself.</p></div></div>
-    <div class="dep"><span class="tag req">required</span><div><strong>Fabric Loader 0.19.3+</strong><p>From the <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric installer</a>.</p></div></div>
-    <div class="dep"><span class="tag req">required</span><div><strong>Fabric API 0.158.0+26.2</strong><p>From <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Modrinth</a> or <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api" target="_blank" rel="noopener">CurseForge</a>.</p></div></div>
-    <div class="dep"><span class="tag opt">optional</span><div><strong>Simple Skin on the server</strong><p>The same jar, server-side — unlocks live sync.</p></div></div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
-      <a class="btn btn-primary" href="features.html#install">Installation guide</a>
-      <button class="btn btn-ghost" type="button" data-close>Close</button>
-    </div>
-  </div>
-</div>
-
 <script src="assets/js/main.js"></script>
 </body>
 </html>

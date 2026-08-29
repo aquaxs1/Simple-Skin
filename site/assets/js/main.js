@@ -154,43 +154,6 @@
     show(0);
   }
 
-  /* ---------------- download modal ---------------- */
-  var modal = document.getElementById("dl-modal");
-  if (modal) {
-    var lastFocus = null;
-
-    var openModal = function () {
-      lastFocus = document.activeElement;
-      modal.classList.add("open");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-      var close = modal.querySelector(".modal-close");
-      if (close) close.focus();
-    };
-
-    var closeModal = function () {
-      modal.classList.remove("open");
-      modal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-      if (lastFocus) lastFocus.focus();
-    };
-
-    document.querySelectorAll("[data-download]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        // The anchor's own navigation starts the .jar download; the dialog then
-        // explains what else has to be installed for it to load.
-        setTimeout(openModal, 350);
-      });
-    });
-
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal || e.target.closest("[data-close]")) closeModal();
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
-    });
-  }
-
   /* ---------------- current year ---------------- */
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = String(new Date().getFullYear());
