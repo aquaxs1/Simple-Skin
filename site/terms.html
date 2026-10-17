@@ -12,9 +12,6 @@
 <meta name="theme-color" content="#070b08">
 <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/img/logo-180.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 <meta property="og:image" content="https://simple-skin.vercel.app/assets/img/og-image.png">
 <meta property="og:url" content="https://simple-skin.vercel.app/terms.html">
@@ -45,7 +42,7 @@
     <div class="wrap">
       <div class="crumb"><a href="index.html">Home</a> / Terms of Use</div>
       <h1>Terms of Use</h1>
-      <p>Short version: it is free MIT-licensed software, it collects nothing about you, and it comes with no
+      <p>Short version: it is free MIT-licensed software, it sends nothing to us, and it comes with no
       warranty. The details are below.</p>
     </div>
   </section>
@@ -78,11 +75,20 @@
 
       <div class="card reveal" id="privacy" style="margin-bottom:20px">
         <h2 style="font-size:1.5rem">3. Privacy</h2>
-        <p><strong>The mod collects nothing.</strong> There is no analytics, no telemetry, no crash reporting
-        and no third-party server. Nothing about you is sent to the authors.</p>
-        <p>Everything the mod stores stays in your own Minecraft folder, under
-        <code>config/simple-skin</code>. Deleting that folder removes all of it.</p>
-        <p>The mod contacts exactly three hosts, all operated by Mojang:</p>
+
+        <h3 style="font-size:1.1rem;margin-top:22px">Who is responsible</h3>
+        <p>Simple Skin and this site are run by Sebi. For anything about your data, message
+        <a href="https://t.me/aquaxs" target="_blank" rel="noopener">@aquaxs on Telegram</a>.</p>
+
+        <h3 style="font-size:1.1rem;margin-top:22px">The mod</h3>
+        <p><strong>Nothing reaches us.</strong> There is no analytics, no telemetry, no crash reporting and no
+        server of ours. The mod runs on your computer and talks only to Mojang and, with live sync, to the
+        Minecraft server you are playing on.</p>
+        <p>What it stores stays on your computer: the library, history and settings under
+        <code>config/simple-skin</code> (a skin taken from another player keeps that player's name), and PNG
+        exports under <code>simple-skin/exports</code> in your Minecraft folder. Deleting those folders removes
+        all of it.</p>
+        <p>The mod contacts four hosts, all operated by Mojang:</p>
         <div class="table-wrap" style="margin:16px 0">
           <table>
             <thead><tr><th>Host</th><th>Why</th></tr></thead>
@@ -96,10 +102,32 @@
         </div>
         <p>Your session token is only ever sent to <code>api.minecraftservices.com</code>, and only to perform
         an action you asked for. It is never written to disk by the mod.</p>
-        <p><strong>This website</strong> serves static files and sets no cookies. It loads a web font from
-        Google Fonts, which means your browser makes a request to <code>fonts.googleapis.com</code> and
-        <code>fonts.gstatic.com</code>. The site itself stores nothing about you. Your hosting provider may
-        keep standard server access logs.</p>
+        <p>With the visibility setting <em>Upload to profile</em> (the default) or <em>Upload + rejoin</em>, the
+        skin you equip is uploaded to your Minecraft profile, where Mojang shows it to everyone, like any skin
+        you set yourself. An outfit's cape choice is set on your profile too. Mojang's own privacy rules apply
+        to your account.</p>
+        <p><strong>Live sync</strong> is on by default. On a server that also runs Simple Skin, the skin you
+        equip is sent to that server, which passes it on to the other players' Simple Skin clients and keeps
+        it in memory only while you are online. On a server without the mod nothing is sent. To turn it off,
+        set <code>"liveSync": false</code> in <code>config/simple-skin/config.json</code>.</p>
+
+        <h3 style="font-size:1.1rem;margin-top:22px">This website</h3>
+        <p>This site is hosted by Vercel Inc. (USA), which processes connection data (IP address, time,
+        requested file, browser) to deliver the pages and protect them against abuse — legitimate interest,
+        Art. 6(1)(f) GDPR. Vercel is certified under the EU-US Data Privacy Framework.</p>
+        <p><strong>No cookies, no tracking, no analytics.</strong> The pages store nothing in your browser — no
+        cookies, no <code>localStorage</code>, no <code>sessionStorage</code>. The font is served from this site,
+        so no request goes to Google.</p>
+        <p>The download buttons lead to GitHub, run by GitHub Inc. (USA, also certified under the Data Privacy
+        Framework), where GitHub's own privacy rules apply. Links to Modrinth, CurseForge and fabricmc.net are
+        ordinary links; those sites' rules apply once you open them.</p>
+
+        <h3 style="font-size:1.1rem;margin-top:22px">Your rights</h3>
+        <p style="margin-bottom:0">You can ask for access to your data, correction, deletion, restriction, a copy,
+        and object to processing based on legitimate interest (Art. 15–21 GDPR) — message
+        <a href="https://t.me/aquaxs" target="_blank" rel="noopener">@aquaxs on Telegram</a>. You can also
+        complain to a data protection authority; in Austria that is the Datenschutzbehörde
+        (<a href="https://www.dsb.gv.at" target="_blank" rel="noopener">dsb.gv.at</a>).</p>
       </div>
 
       <div class="card reveal" id="warranty" style="margin-bottom:20px">
@@ -125,7 +153,7 @@
         <h2 style="font-size:1.5rem">6. Changes</h2>
         <p>These terms may be updated as the mod changes. The version published here is the one that applies.
         Continuing to use the mod after an update means you accept the revised terms.</p>
-        <p class="muted" style="margin-bottom:0">Last updated: <span data-year>2026</span>.</p>
+        <p class="muted" style="margin-bottom:0">Last updated: 16 October 2026.</p>
       </div>
 
     </div>
@@ -151,7 +179,7 @@
       <div class="foot-col">
         <h4>Get started</h4>
         <ul>
-          <li><ahref="download.html">Download</a></li>
+          <li><a href="download.html">Download</a></li>
           <li><a href="setup.html#install">Installation</a></li>
           <li><a href="setup.html#usage">How to use</a></li>
           <li><a href="setup.html#requirements">Requirements</a></li>

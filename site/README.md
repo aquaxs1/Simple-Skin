@@ -48,6 +48,7 @@ site/
 └── assets/
     ├── css/style.css   one stylesheet, palette taken from the mod's SimpleSkinTheme
     ├── js/main.js      slideshow, download dialog, scroll reveal, mobile nav
+    ├── fonts/          Outfit, self-hosted (SIL OFL), so no page loads anything from Google
     └── img/            logo sizes and the six showcase illustrations
 ```
 
