@@ -163,6 +163,11 @@ public final class SimpleSkinClient implements ClientModInitializer {
         if (!publish) {
             return;
         }
+        if (config.visibility() == SimpleSkinConfig.Visibility.LOCAL_ONLY) {
+            // "Only me" means nothing leaves this machine: no live sync, no cape change on the profile.
+            visibility.publish(skin, repository.imagePath(skin), status);
+            return;
+        }
         applyCape(skin, status);
         // On a server running Simple Skin this reaches everyone immediately, so the slower
         // upload-and-rejoin route is only needed where the channel is unavailable.

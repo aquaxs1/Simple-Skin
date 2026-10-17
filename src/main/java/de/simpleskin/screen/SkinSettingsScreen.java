@@ -110,11 +110,23 @@ public final class SkinSettingsScreen extends Screen {
         addRenderableWidget(keyButton);
 
         SimpleSkinConfig.Visibility visibility = mod.config().visibility();
-        addRenderableWidget(new ThemedButton(x, panelY + 222, fieldWidth, 20,
-                Component.literal("Visibility: " + visibility.label()), ignored -> {
+        addRenderableWidget(new ThemedButton(x, panelY + 222, half, 20,
+                Component.literal(visibility.label()), ignored -> {
                     mod.config().setVisibility(mod.config().visibility().next());
                     rebuildWidgets();
                 }, false).tooltip(Component.literal(visibility.description())));
+        boolean liveSync = mod.config().liveSync();
+        ThemedButton liveSyncButton = new ThemedButton(x + half + 6, panelY + 222, half, 20,
+                Component.literal("Live sync: " + (liveSync ? "on" : "off")), ignored -> {
+                    mod.config().setLiveSync(!mod.config().liveSync());
+                    rebuildWidgets();
+                }, false).tooltip(Component.literal(
+                        "Sends your skin straight to other Simple Skin players on servers that run the mod. "
+                                + "Never used with \"Only me\"."));
+        if (visibility == SimpleSkinConfig.Visibility.LOCAL_ONLY) {
+            liveSyncButton.disabled();
+        }
+        addRenderableWidget(liveSyncButton);
 
         addRenderableWidget(new ThemedButton(x, panelY + 190, half, 20,
                 Component.literal(skin.capeChoice().label()), ignored -> {
