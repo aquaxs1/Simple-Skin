@@ -10,9 +10,9 @@ step**, so it deploys as static files anywhere.
 3. Framework preset: **Other**. Leave the build and output commands empty.
 4. Deploy.
 
-`vercel.json` handles the rest — clean URLs (`/features` instead of `/features.html`), the
-correct `Content-Type` and `Content-Disposition` for the mod jar so it downloads instead of
-opening, cache headers for assets, and a few security headers.
+`vercel.json` handles the rest — clean URLs (`/features` instead of `/features.html`), cache
+headers for assets, and a few security headers. (It still has a `Content-Type` rule for
+`/downloads/*.jar` from when the jar was hosted here; it does nothing now.)
 
 To deploy from the CLI instead:
 
@@ -43,8 +43,6 @@ site/
 ├── vercel.json         routing, headers, clean URLs
 ├── robots.txt          crawler rules
 ├── sitemap.xml         page index
-├── downloads/
-│   └── simple-skin-2.0.0.jar
 └── assets/
     ├── css/style.css   one stylesheet, palette taken from the mod's SimpleSkinTheme
     ├── js/main.js      slideshow, download dialog, scroll reveal, mobile nav
@@ -54,9 +52,10 @@ site/
 
 ## Updating the download
 
-When a new mod version is built, drop the jar into `downloads/` and update the file name in the
-four HTML pages (search for `simple-skin-2.0.0.jar`) plus the version label on the download
-buttons.
+The jar is not hosted here: the download buttons link to the
+[GitHub releases](https://github.com/aquaxs1/Simple-Skin/releases/latest). After publishing a
+new release, only update the version label on the home page's download button (search for
+`simple-skin-2.0.0.jar`).
 
 ## About the showcase pictures
 

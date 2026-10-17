@@ -28,7 +28,9 @@ There are two routes, and the mod picks the best one available.
 skin over a `simple_skin:equip` plugin channel; the server validates it and
 relays it to every other Simple Skin client, which applies it right away. No
 rejoin, no Mojang round-trip. On a vanilla server the channel is never
-negotiated, so nothing is sent and the mod falls back to route 2.
+negotiated, so nothing is sent and the mod falls back to route 2. Live sync can
+be switched off in the skin settings (**Live sync: on/off**), and it never runs
+with visibility `Only me`.
 
 **2. Profile upload (works everywhere, slower).** This is the only route a
 purely client-side mod has. Every other player's game asks *the server* what
@@ -42,11 +44,11 @@ you are logging in. So:
 3. **Rejoin.** Once Mojang serves the new skin, reconnecting makes the server
    re-read your profile and send the new texture to everyone online.
 
-The `Visibility` setting controls route 2:
+The `Visibility` setting controls how far a change travels:
 
 | Setting | What happens |
 | --- | --- |
-| `Only me` | Local render only. Nothing leaves your machine. |
+| `Only me` | Local render only. Equipping sends nothing anywhere: no live sync, no upload, no cape change. |
 | `Upload to profile` (default) | Uploads and verifies; you press **Rejoin now** when it suits you. |
 | `Upload + rejoin` | Uploads, verifies, and reconnects automatically. |
 
@@ -62,7 +64,9 @@ pretending it worked.
 Mojang only lets an account activate a cape it already owns — capes cannot be
 uploaded, by this mod or any other. An outfit can therefore keep the current
 cape, hide it, or switch to one of your owned capes. That change goes to the
-profile, so other players see it the same way they see a new skin.
+profile, so other players see it the same way they see a new skin. With
+visibility `Only me` the cape choice is only shown on your screen and the
+profile is left alone.
 
 ## Folders
 
