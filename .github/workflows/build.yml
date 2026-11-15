@@ -5,7 +5,15 @@ on:
     branches: ["**"]
     tags: ["v*"]
   pull_request:
+  # Actions -> Build -> "Run workflow". Leave the version empty for a plain
+  # build; fill it in (for example 2.0.0) to also publish that release, which
+  # creates the v2.0.0 tag on the commit the run was started from.
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Version to release, for example 2.0.0 (empty = build only)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -49,11 +57,12 @@ jobs:
           path: dist/
           if-no-files-found: error
 
-  # Independent of the build so that a v* tag always produces a release, even if
-  # the build failed here — the jar can then be attached by hand.
+  # Independent of the build so that a v* tag (or a manual run with a version)
+  # always produces a release, even if the build failed here — the jar can then
+  # be attached by hand.
   release:
     needs: build
-    if: always() && startsWith(github.ref, 'refs/tags/v')
+    if: always() && (startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.release_version != ''))
     runs-on: ubuntu-latest
     steps:
       - name: Download the built jar
@@ -67,13 +76,19 @@ jobs:
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ inputs.release_version && format('v{0}', inputs.release_version) || github.ref_name }}
         run: |
+          case "$TAG" in
+            v[0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "::error::'$TAG' is not a version tag like v2.0.0"; exit 1 ;;
+          esac
           if [ -d dist ] && [ -n "$(ls -A dist 2>/dev/null)" ]; then
             gh release create "$TAG" dist/* \
-              --repo "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes
+              --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "$TAG" --generate-notes
           else
             gh release create "$TAG" \
-              --repo "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes
+              --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "$TAG" --generate-notes
             echo "No jar was built - attach it to the release manually." >> "$GITHUB_STEP_SUMMARY"
           fi
