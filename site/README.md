@@ -1,61 +1,57 @@
 # Simple Skin — website
 
-The marketing and documentation site for the mod. Plain HTML, CSS and JavaScript with **no build
-step**, so it deploys as static files anywhere.
+The site at <https://simple-skin.vercel.app>. Plain HTML, CSS and JavaScript: no build
+step, no framework, nothing loaded from another host.
 
-## Deploying to Vercel
+| File | What it is |
+| --- | --- |
+| `index.html` | Landing page |
+| `features.html` | Features |
+| `setup.html` | Setup |
+| `faq.html` | FAQ |
+| `download.html` | Download |
+| `terms.html` | Terms of Use |
+| `404.html` | Shown for any address that does not exist |
+| `assets/site.css` | This project's accent colour and anything only this site needs |
+| `assets/scene.js` | The 3D scene in the page header |
+| `assets/aqx/` | The look and behaviour shared by all AquAxs project sites |
 
-1. Import the repository at [vercel.com/new](https://vercel.com/new).
-2. Set **Root Directory** to `site`.
-3. Framework preset: **Other**. Leave the build and output commands empty.
-4. Deploy.
+## The shared part
 
-`vercel.json` handles the rest — clean URLs (`/features` instead of `/features.html`), cache
-headers for assets, and a few security headers. (It still has a `Content-Type` rule for
-`/downloads/*.jar` from when the jar was hosted here; it does nothing now.)
+`assets/aqx/` is the same in every project site: the stylesheet (`aqx.css`),
+the interactions (`aqx.js`), the 3D stage (`stage.js`), three.js and the three
+typefaces. It follows the portfolio at aqua.is-a.dev: a black sky with slow
+dots, glass cards that lean towards the pointer, Bodoni Moda headlines.
+Change the accent in `assets/site.css` (`--ac`, `--ac-hi`), not in `aqx.css`.
 
-To deploy from the CLI instead:
+## The 3D scene
+
+`assets/scene.js` exports one function that builds its objects into
+`stage.frame`. The stage (`assets/aqx/stage.js`) does the rest: camera, lights,
+resizing, pointer and touch, pausing off screen. With reduced motion the scene
+is one still frame; without WebGL a glow in the accent colour stays instead.
+
+## Preview
+
+Links have no `.html` (Vercel serves `/download` from `download.html`), so open
+the folder through a server that does the same:
 
 ```bash
-cd site
-npx vercel --prod
+npx serve site
 ```
 
-## Local preview
+## Deploy
 
-Any static server works, for example:
-
-```bash
-cd site
-python3 -m http.server 8000
-```
-
-Then open <http://localhost:8000>.
-
-## Layout
-
-```
-site/
-├── index.html          landing page — hero, slideshow, highlights, download
-├── features.html       "View more" target — full feature list, install, usage
-├── faq.html            questions, safety and troubleshooting
-├── terms.html          licence, acceptable use, privacy
-├── vercel.json         routing, headers, clean URLs
-├── robots.txt          crawler rules
-├── sitemap.xml         page index
-└── assets/
-    ├── css/style.css   one stylesheet, palette taken from the mod's SimpleSkinTheme
-    ├── js/main.js      slideshow, download dialog, scroll reveal, mobile nav
-    ├── fonts/          Outfit, self-hosted (SIL OFL), so no page loads anything from Google
-    └── img/            logo sizes and the six showcase illustrations
-```
+Vercel, root directory `site`, no build command. `vercel.json` sets clean URLs
+and the security headers. The site sets no cookies and stores nothing.
 
 ## Updating the download
 
 The jar is not hosted here: the download buttons link to the
 [GitHub releases](https://github.com/aquaxs1/Simple-Skin/releases/latest). After publishing a
-new release, only update the version label on the home page's download button (search for
-`simple-skin-2.0.0.jar`).
+new release, only update the version on the home page: the two download buttons (search
+`index.html` for `simple-skin-2.0.0.jar` and `Download v2.0.0`) and `softwareVersion` in the
+JSON-LD block at the top of the same file.
 
 ## About the showcase pictures
 
@@ -63,3 +59,5 @@ new release, only update the version label on the home page's download button (s
 the mod's real layout constants and its `SimpleSkinTheme` colours, so they match what the screens
 draw, but they were not captured from a running game. Replace them with real screenshots once the
 mod has been run.
+
+The skins the 3D model wears (`assets/scene.js`) are made up for this page.
