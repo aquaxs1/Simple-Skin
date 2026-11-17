@@ -1,189 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
-<title>Features — Simple Skin</title>
-<meta property="og:type" content="website">
-<meta property="og:title" content="Features — Simple Skin">
-<meta property="og:description" content="Every feature of Simple Skin: the library, live sync, profile upload, the editor, outfits and hotkeys.">
-<meta name="description" content="Every feature of Simple Skin: the library, live sync, profile upload, the editor, outfits and hotkeys.">
-<meta name="theme-color" content="#070b08">
-<link rel="icon" href="assets/img/favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="assets/img/logo-180.png">
-<link rel="stylesheet" href="assets/css/style.css">
-<meta property="og:image" content="https://simple-skin.vercel.app/assets/img/og-image.png">
-<meta property="og:url" content="https://simple-skin.vercel.app/features.html">
-<link rel="canonical" href="https://simple-skin.vercel.app/features">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Features — Simple Skin</title>
+  <meta name="description" content="Every feature of Simple Skin: the library, live sync, profile upload, the editor, outfits and hotkeys.">
+  <link rel="canonical" href="https://simple-skin.vercel.app/features">
+  <meta name="theme-color" content="#050806">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Simple Skin">
+  <meta property="og:title" content="Features — Simple Skin">
+  <meta property="og:description" content="Every feature of Simple Skin: the library, live sync, profile upload, the editor, outfits and hotkeys.">
+  <meta property="og:url" content="https://simple-skin.vercel.app/features">
+  <meta property="og:image" content="https://simple-skin.vercel.app/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/logo-180.png">
+  <link rel="preload" href="assets/aqx/fonts/bodoni-moda-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/aqx/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/aqx/aqx.css">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/aqx/boot.js"></script>
+  <script type="module" src="assets/aqx/aqx.js"></script>
 </head>
 <body>
-<div class="bg-fx" aria-hidden="true"></div>
+  <a class="skip" href="#main">Skip to content</a>
+  <canvas class="aqx-sky" aria-hidden="true"></canvas>
+  <div class="aqx-aura" aria-hidden="true"></div>
+  <div class="aqx-progress" aria-hidden="true"></div>
 
-<header class="site-head">
-  <div class="wrap nav">
-    <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="40" height="40">Simple&nbsp;Skin</a>
-    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
-    <nav class="nav-links" id="nav-links">
-      <a href="index.html#showcase">Showcase</a>
-      <a href="features.html" aria-current="page">Features</a>
-      <a href="setup.html">Setup</a>
-      <a href="faq.html">FAQ</a>
-      <a class="btn btn-primary btn-sm" href="download.html">Download</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="page-hero">
-    <div class="wrap">
-      <div class="crumb"><a href="index.html">Home</a> / Features &amp; usage</div>
-      <h1>Everything Simple Skin does</h1>
-      <p>The full list of what the mod can do. Installing it and driving it live under <a href="setup.html">Setup</a>.</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="download.html">Download</a>
-        <a class="btn btn-ghost" href="setup.html">Setup guide</a>
-      </div>
+  <header class="nav" data-stuck="false" data-open="false">
+    <div class="nav-inner">
+      <a class="brand" href="./" aria-label="Simple Skin home"><img src="assets/img/logo-96.png" alt="" width="32" height="32"><span>Simple Skin</span></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="./#showcase">Showcase</a></li>
+        <li><a href="features" aria-current="page">Features</a></li>
+        <li><a href="setup">Setup</a></li>
+        <li><a href="faq">FAQ</a></li>
+        <li><a href="https://github.com/aquaxs1/Simple-Skin" rel="noopener">GitHub</a></li>
+        <li><a class="btn btn-primary btn-sm" href="download">Download</a></li>
+      </ul>
     </div>
-  </section>
+  </header>
 
-  <!-- ============ FEATURE LIST ============ -->
-  <section class="section" id="capabilities">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <div class="kicker">Capabilities</div>
-        <h2>What the mod can do</h2>
+  <main id="main">
+<header class="page-head">
+      <div class="stage" data-scene="assets/scene.js" data-mode="mini" aria-hidden="true"><canvas></canvas></div>
+      <div class="page-head-inner">
+        <span class="eyebrow">Features</span>
+        <h1>Everything Simple Skin <em>does</em></h1>
+        <p class="lead">The full list of what the mod can do. Installing it and driving it live under <a class="textlink" href="setup">Setup</a>.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Download</a><a class="btn" href="setup">Setup guide</a></div>
       </div>
+    </header>
 
-      <div class="grid grid-2">
-        <article class="card reveal">
-          <h3>Skin library</h3>
-          <p>Three tabs: History, your saved wardrobe, and everyone currently on the server.</p>
-        </article>
-
-        <article class="card reveal" data-delay="70">
-          <h3>Equip without restarting</h3>
-          <p>Equip from a card, the settings screen or a per-skin hotkey — applied in the same tick.</p>
-        </article>
-
-        <article class="card reveal">
-          <h3>Live sync to other players</h3>
-          <p>On a Simple Skin server the swap reaches every other client over a plugin channel, instantly.</p>
-        </article>
-
-        <article class="card reveal" data-delay="70">
-          <h3>Profile upload with verification</h3>
-          <p>Anywhere else the PNG goes to your Mojang profile, and the mod waits until Mojang really serves it.</p>
-        </article>
-
-        <article class="card reveal">
-          <h3>Steal from the server</h3>
-          <p>Copy anyone on the tab list with one click — wear it now or save it.</p>
-        </article>
-
-        <article class="card reveal" data-delay="70">
-          <h3>Search any username</h3>
-          <p>Look up any name through Mojang's public API. The player need not be online.</p>
-        </article>
-
-        <article class="card accent reveal">
-          <h3>Import from your computer</h3>
-          <p>Pick a PNG, or drop files into <code>config/simple-skin/import</code> and they appear on their own.</p>
-        </article>
-
-        <article class="card accent reveal" data-delay="70">
-          <h3>Built-in editor</h3>
-          <p>Remove overlay layers, graft a head from another skin, or replace a colour. The original is kept.</p>
-        </article>
-
-        <article class="card accent reveal">
-          <h3>Outfits with capes</h3>
-          <p>Pair a skin with a cape you own — keep it, hide it, or pick a specific one.</p>
-        </article>
-
-        <article class="card accent reveal" data-delay="70">
-          <h3>Hotkeys, shuffle and rotation</h3>
-          <p>Bind any key to any saved skin, with a clash warning. Shuffle and timed rotation have their own keys.</p>
-        </article>
-
-        <article class="card reveal">
-          <h3>3D preview</h3>
-          <p>A real player model you can drag to rotate, so you can check the back before wearing it.</p>
-        </article>
-
-        <article class="card reveal" data-delay="70">
-          <h3>Export and delete</h3>
-          <p>Write any skin back out as a PNG, or delete it behind a two-step confirm.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ REQUIREMENTS ============ -->
-
-  <!-- ============ INSTALL ============ -->
-
-  <!-- ============ USAGE ============ -->
-
-  <section class="section">
-    <div class="wrap">
-      <div class="band reveal">
-        <h2>Ready to try it?</h2>
-        <p>One jar, a couple of dependencies, and a key to press.</p>
-        <div class="hero-cta" style="justify-content:center;margin-top:24px">
-          <a class="btn btn-primary btn-lg" href="download.html">Download</a>
-          <a class="btn btn-lg btn-ghost" href="faq.html">Read the FAQ</a>
+    <section class="sec" id="capabilities">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Capabilities</span>
+          <h2>What the mod <em>can do</em></h2>
+        </div>
+        <div class="cards" data-cols="3">
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span>
+            <h3>Skin library</h3>
+            <p>Three tabs: History, your saved wardrobe, and everyone currently on the server.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+            <h3>Equip without restarting</h3>
+            <p>Equip from a card, the settings screen or a per-skin hotkey — applied in the same tick.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5 6.5-5s5.5 1.5 6.5 5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 15.5c2.5.3 4.5 1.6 5.5 4.5"/></svg></span>
+            <h3>Live sync to other players</h3>
+            <p>On a Simple Skin server the swap reaches every other client over a plugin channel, instantly.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>
+            <h3>Profile upload with verification</h3>
+            <p>Anywhere else the PNG goes to your Mojang profile, and the mod waits until Mojang really serves it.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.2-6 8-6s6.800 2 8 6"/></svg></span>
+            <h3>Steal from the server</h3>
+            <p>Copy anyone on the tab list with one click — wear it now or save it.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></span>
+            <h3>Search any username</h3>
+            <p>Look up any name through Mojang's public API. The player need not be online.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+            <h3>Import from your computer</h3>
+            <p>Pick a PNG, or drop files into <code>config/simple-skin/import</code> and they appear on their own.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 3 9 13M15 5l4 4M9 13c-3 0-4 2-4 4s-2 3-2 3 6 1 8-2c.800-1.200.500-3-2-5z"/></svg></span>
+            <h3>Built-in editor</h3>
+            <p>Remove overlay layers, graft a head from another skin, or replace a colour. The original is kept.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8 4 4 5-7 5 7 4-4-2 11H5z"/></svg></span>
+            <h3>Outfits with capes</h3>
+            <p>Pair a skin with a cape you own — keep it, hide it, or pick a specific one.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12 20 3M16 7l3 3M14 9l2 2"/></svg></span>
+            <h3>Hotkeys, shuffle and rotation</h3>
+            <p>Bind any key to any saved skin, with a clash warning. Shuffle and timed rotation have their own keys.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.500v9L12 21l-8-4.500v-9zM4 7.500l8 4.500 8-4.500M12 12v9"/></svg></span>
+            <h3>3D preview</h3>
+            <p>A real player model you can drag to rotate, so you can check the back before wearing it.</p>
+          </article>
+          <article class="card reveal">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></span>
+            <h3>Export and delete</h3>
+            <p>Write any skin back out as a PNG, or delete it behind a two-step confirm.</p>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
 
-<footer class="site-foot">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-brand">
-        <a class="brand" href="index.html" style="margin-bottom:14px"><img src="assets/img/logo-96.png" alt="" width="40" height="40">Simple&nbsp;Skin</a>
-        <p>A client-side Fabric mod for Minecraft 26.2. Swap skins in-game and have everyone else see it.</p>
+    <section class="sec">
+      <div class="wrap">
+        <div class="cta reveal">
+          <h2>Ready to <em>try it?</em></h2>
+          <p class="lead">One jar, a couple of dependencies, and a key to press.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary btn-lg" href="download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Download</a>
+            <a class="btn btn-lg" href="faq">Read the FAQ</a>
+          </div>
+        </div>
       </div>
-      <div class="foot-col">
-        <h4>Explore</h4>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-about">
+          <a class="brand" href="./"><img src="assets/img/logo-96.png" alt="" width="32" height="32" loading="lazy"><span>Simple Skin</span></a>
+          <p>A client-side Fabric mod for Minecraft 26.2. Swap skins in-game and have everyone else see it.</p>
+        </div>
+        <nav class="footer-col" aria-label="Explore">
+          <h2>Explore</h2>
+          <ul>
+            <li><a href="./#showcase">Showcase</a></li>
+            <li><a href="./#highlights">Highlights</a></li>
+            <li><a href="setup">Setup</a></li>
+            <li><a href="features">Features</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Get started">
+          <h2>Get started</h2>
+          <ul>
+            <li><a href="download">Download</a></li>
+            <li><a href="setup#install">Installation</a></li>
+            <li><a href="setup#usage">How to use</a></li>
+            <li><a href="setup#requirements">Requirements</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Help">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="faq">FAQ</a></li>
+            <li><a href="faq#trouble">Troubleshooting</a></li>
+            <li><a href="terms">Terms of Use</a></li>
+            <li><a href="terms#privacy">Privacy</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Code">
+          <h2>Code</h2>
+          <ul>
+            <li><a href="https://github.com/aquaxs1/Simple-Skin" rel="noopener">GitHub repository</a></li>
+            <li><a href="https://github.com/aquaxs1/Simple-Skin/releases" rel="noopener">Releases</a></li>
+            <li><a href="https://github.com/aquaxs1/Simple-Skin/issues" rel="noopener">Report a problem</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="family">
+        <span class="family-label">More by AquAxs</span>
         <ul>
-          <li><a href="index.html#showcase">Showcase</a></li>
-          <li><a href="index.html#highlights">Highlights</a></li>
-          <li><a href="setup.html">Setup</a></li>
-          <li><a href="features.html">Features</a></li>
+          <li><a href="https://aqua.is-a.dev/portfolio" data-home rel="noopener">All projects</a></li>
+          <li><a href="https://pfpair.app/" rel="noopener">Pfpair</a></li>
+          <li><a href="https://handled-market.vercel.app/" rel="noopener">Handled</a></li>
+          <li><a href="https://larpcorddc.vercel.app/" rel="noopener">Larpcord</a></li>
+          <li><a href="https://mybluejarvis.vercel.app/" rel="noopener">My Jarvis</a></li>
+          <li><a href="https://guardiantus-av.vercel.app/" rel="noopener">Guardiantus AV</a></li>
+          <li><a href="https://explorer-manager.vercel.app/" rel="noopener">Explorer Manager</a></li>
+          <li><a href="https://cipher-box-file-encrypter.vercel.app/" rel="noopener">CipherBox</a></li>
+          <li><a href="https://easy-cloner.vercel.app/" rel="noopener">Easy Server Cloner</a></li>
+          <li><a href="https://autobuild-gui.vercel.app/" rel="noopener">Autobuild GUI</a></li>
+          <li><a href="https://timetrackerextension.vercel.app/" rel="noopener">WebsiteTimeTrack</a></li>
+          <li><a href="https://wave-uninstaller.vercel.app/" rel="noopener">Wave Uninstaller</a></li>
+          <li><a href="https://discord-sakurabot.vercel.app/" rel="noopener">Sakura Bot</a></li>
+          <li><a href="https://revox-client.vercel.app/" rel="noopener">Revox Client</a></li>
+          <li><a href="https://chesstrainer.cc.cd/" rel="noopener">Chess Trainer</a></li>
         </ul>
       </div>
-      <div class="foot-col">
-        <h4>Get started</h4>
-        <ul>
-          <li><a href="download.html">Download</a></li>
-          <li><a href="setup.html#install">Installation</a></li>
-          <li><a href="setup.html#usage">How to use</a></li>
-          <li><a href="setup.html#requirements">Requirements</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h4>Help</h4>
-        <ul>
-          <li><a href="setup.html">Setup</a>
-      <a href="faq.html">FAQ</a></li>
-          <li><a href="faq.html#trouble">Troubleshooting</a></li>
-          <li><a href="terms.html">Terms of Use</a></li>
-          <li><a href="terms.html#privacy">Privacy</a></li>
-        </ul>
+      <div class="footer-legal">
+        <p>© 2026 Simple Skin contributors · MIT licensed</p>
+        <p>Not affiliated with Mojang Studios or Microsoft.</p>
       </div>
     </div>
-    <div class="foot-bar">
-      <span>© <span data-year>2026</span> Simple Skin contributors · MIT licensed</span>
-      <span>Not affiliated with Mojang Studios or Microsoft.</span>
-    </div>
-  </div>
-</footer>
-<script src="assets/js/main.js"></script>
+  </footer>
 </body>
 </html>

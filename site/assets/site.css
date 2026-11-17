@@ -1,0 +1,20 @@
+/* Simple Skin — the green of the mod's own theme. Everything else is assets/aqx/aqx.css. */
+
+:root {
+  --ac: #7ed957;
+  --ac-hi: #c8f5ae;
+  --ac-ink: #071a02;
+}
+
+/* Two whole sentences in the headline: one size down. */
+.hero h1 {
+  font-size: clamp(2.4rem, 3.7vw + 0.9rem, 4.4rem);
+}
+
+/* The route a skin takes, spelled out as the mod names it. */
+.route {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--ac-hi);
+}
